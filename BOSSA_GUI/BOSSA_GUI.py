@@ -45,6 +45,7 @@ import sys
 import os
 
 import serial
+from serial import EIGHTBITS, PARITY_NONE, STOPBITS_ONE
 import time
 
 # Setting constants
@@ -268,7 +269,7 @@ class MainWidget(QWidget):
         fileName, _ = QFileDialog.getOpenFileName(
             None,
             "Select Binary File to Upload",
-            "",
+            self.theFirmwareName,
             "Binary Files (*.bin);;All Files (*)",
             options=options)
         if fileName:
@@ -318,48 +319,85 @@ class MainWidget(QWidget):
             self.writeMessage("Upload is already running")
             return
 
-        # Open the port. Enter bootloader
-        self.writeMessage("\nEnter bootloader\n")
-
-        portsBefore = []
-        for desc, name, sys in gen_serial_ports():
-            portsBefore.append(sys)
-
-        try:
-            port = serial.Serial(self.port, baudrate=1200, timeout=1)
-        except (ValueError, IOError) as err:
-            self.writeMessage(str(err))
-            return
-
-        port.setDTR(0)
-
-        port.close()
-
-        time.sleep(0.4)
-
-        startTime = time.time()
-        keepGoing = True
         portActual = self.port
 
-        # For up to three seconds: keep checking the available ports to see if a new one pops up
-        # If no new port appears, try self.port
-        while keepGoing and (time.time() < (startTime + 3)):
+        if self.offset.find("SAMD21") >= 0:
 
-            portsAfter = []
+            # Open the port at 1200 baud to enter the bootloader
+            # See touchForCDCReset in:
+            # https://github.com/arduino/Arduino/blob/master/arduino-core/src/processing/app/Serial.java
+            self.writeMessage("\nEnter SAMD21 bootloader\n")
+
+            portsBefore = []
             for desc, name, sys in gen_serial_ports():
-                portsAfter.append(sys)
+                portsBefore.append(sys)
 
-            for portSys in portsAfter:
-                if portSys not in portsBefore:
-                    portActual = portSys
+            try:
+                port = serial.Serial(self.port, baudrate=1200, bytesize=EIGHTBITS, parity=PARITY_NONE, stopbits=STOPBITS_ONE, timeout=0)
+            except (ValueError, IOError) as err:
+                self.writeMessage(str(err))
+                return
+
+            port.setDTR(False) # Reset the SAMD
+            port.close()
+
+            time.sleep(0.4)
+
+            startTime = time.time()
+            keepGoing = True
+            portGone = False
+
+            # For up to three seconds: wait for the port to disappear
+            while keepGoing and (time.time() < (startTime + 3.0)):
+
+                portsAfter = []
+                for desc, name, sys in gen_serial_ports():
+                    portsAfter.append(sys)
+
+                if portActual not in portsAfter:
+                    #self.writeMessage("Hey! " + str(portActual) + " disappeared!")
+                    portGone = True
                     keepGoing = False
+                else:
+                    time.sleep(0.25)
 
             time.sleep(0.25)
 
-        if keepGoing:
-            self.writeMessage("New port not detected. Trying " + portActual)
+            startTime = time.time()
+            keepGoing = True
+
+            # For up to three seconds: keep checking the available ports to see if a new one pops up, or the old one reappears
+            # If no new port appears, try self.port
+            while keepGoing and (time.time() < (startTime + 3.0)):
+
+                portsAfter = []
+                for desc, name, sys in gen_serial_ports():
+                    portsAfter.append(sys)
+
+                for portSys in portsAfter:
+                    if portSys not in portsBefore:
+                        #self.writeMessage("Hey! Found new port " + str(portSys))
+                        portActual = portSys
+                        keepGoing = False
+                        break
+
+                    if (portSys == portActual) and portGone:
+                        #self.writeMessage("Hey! " + str(portSys) + " came back again!")
+                        portActual = portSys
+                        keepGoing = False
+                        break
+
+                if keepGoing:
+                    time.sleep(0.25)
+
+            if keepGoing:
+                self.writeMessage("Port has not changed. Trying " + portActual)
+            else:
+                self.writeMessage("Port has changed. Using " + portActual)
+
         else:
-            self.writeMessage("New port detected. Using " + portActual)
+
+            self.writeMessage("\nAssuming SAMD51 is already in bootloader mode (fading LED)\n")
 
         self.writeMessage("\nUploading binary\n")
 
