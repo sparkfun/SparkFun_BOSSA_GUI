@@ -4,7 +4,7 @@
   <a href="https://github.com/sparkfun/SparkFun_BOSSA_GUI/issues" alt="Issues">
     <img src="https://img.shields.io/github/issues/sparkfun/SparkFun_BOSSA_GUI.svg" /></a>
   <a href="https://github.com/sparkfun/SparkFun_BOSSA_GUI/actions" alt="Actions">
-    <img src="https://github.com/sparkfun/SparkFun_BOSSA_GUI/actions/workflows/mkdocs.yml/badge.svg" /></a>
+    <img src="https://github.com/sparkfun/SparkFun_BOSSA_GUI/actions/workflows/build.yml/badge.svg" /></a>
   <a href="https://github.com/sparkfun/SparkFun_BOSSA_GUI/blob/main/LICENSE.md" alt="License">
     <img src="https://img.shields.io/badge/license-CC%20BY--SA%204.0-EF9421.svg" /></a>
   <a href="https://twitter.com/intent/follow?screen_name=sparkfun">
@@ -29,7 +29,7 @@ Our BOSSA GUI is a convenient way to upgrade the firmware on many SAMD21 and SAM
 
 ## BOSSA_GUI Executable
 
-You will find the BOSSA_GUI executable attached to the [latest release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases).
+You will find the BOSSA_GUI executable in the [Windows_exe folder](./Windows_exe).
 
 ## Thanks
 
@@ -37,8 +37,9 @@ Big thanks go to Scott Shumate (@shumatech) and the contributors to [BOSSA](http
 
 ## Repository Contents
 
-* **[/BOSSA_GUI](/BOSSA_GUI/)** - Python3 PyQt5 source (.py)
-* **[/.github/workflows/build.yml](/BOSSA_GUI/)** - YAML for the GitHub Build Action - based on [this how-to](https://data-dive.com/multi-os-deployment-in-cloud-using-pyinstaller-and-github-actions)
+* **[/Windows_exe](./Windows_exe)** - Windows executable (.exe)
+* **[/BOSSA_GUI](./BOSSA_GUI)** - Python3 PyQt5 source (.py)
+* **[/.github/workflows/build.yml](./.github/workflows/build.yml)** - YAML for the GitHub Build Action - based on [this how-to](https://data-dive.com/multi-os-deployment-in-cloud-using-pyinstaller-and-github-actions)
 
 ## License Information
 
