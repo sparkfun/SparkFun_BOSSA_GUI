@@ -11,7 +11,7 @@
     <img src="https://img.shields.io/twitter/follow/sparkfun.svg?style=social&logo=twitter" alt="follow on Twitter"></a>
 </p>
 
-[![SparkFun LoRaSerial Kit - 915MHz](https://cdn.sparkfun.com//assets/parts/1/8/9/4/0/19311-SparkFun_LoRaSerial_Kit_-_915MHz-02.jpg)](https://www.sparkfun.com/products/19311)
+[![SparkFun LoRaSerial Kit - 915MHz](.img/SparkFun_LoRaSerial_Kit.png)](https://www.sparkfun.com/products/19311)
 
 *[SparkFun LoRaSerial Kit - 915MHz (WRL-19311)](https://www.sparkfun.com/products/19311)*
 
