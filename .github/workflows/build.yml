@@ -16,22 +16,25 @@ jobs:
         include:
           - os: windows-latest
             TARGET: windows
+            WORKING_DIR: ./BOSSA_GUI
             CMD_BUILD: pyinstaller --onefile --clean --noconsole --distpath=../Windows_exe --icon=sfe_logo_sm.ico --add-binary="bossac.exe;." --add-binary="sfe_logo_sm.png;." BOSSA_GUI.py
             OUT_FILE_NAME: ../Windows_exe/BOSSA_GUI.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
+            RM_DIR: build
+            RM_FILES: BOSSA_GUI.spec
           # TO DO: Add - os: macos-latest. Will require the .py to be upgraded so it calls the correct bossac executable for macos vs windows
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}        
+      - name: Change directory
+        run: |
+          cd ${{matrix.WORKING_DIR}}
       - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      - name: Change directory
-        run: |
-          cd ./BOSSA_GUI
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -40,8 +43,8 @@ jobs:
         run: ${{matrix.CMD_BUILD}}
       - name: Delete build files
         run: |
-          rm -r build
-          rm BOSSA_GUI.spec
+          rm -r ${{matrix.RM_DIR}}
+          rm ${{matrix.RM_FILES}}
       - name: Add and Commit
         uses: EndBug/add-and-commit@v9
         with:        
