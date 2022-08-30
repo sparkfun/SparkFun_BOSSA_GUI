@@ -18,7 +18,7 @@ jobs:
             TARGET: windows
             WORKING_DIR: BOSSA_GUI
             DEPENDENCIES: pyinstaller PyQt5 pyserial
-            CMD_BUILD: pyinstaller --onefile --clean --noconsole --distpath=..\Windows_exe --icon=sfe_logo_sm.ico --add-binary="bossac.exe;." --add-binary="sfe_logo_sm.png;." BOSSA_GUI.py
+            CMD_BUILD: pyinstaller --onefile --clean --noconsole --distpath="..\Windows_exe" --icon=sfe_logo_sm.ico --add-binary="bossac.exe;." --add-binary="sfe_logo_sm.png;." BOSSA_GUI.py
             OUT_FILE_NAME: ..\Windows_exe\BOSSA_GUI.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
             RM_DIR: build
