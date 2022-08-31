@@ -39,8 +39,13 @@ Big thanks go to Scott Shumate (@shumatech) and the contributors to [BOSSA](http
 
 * **[/windows](./windows)** - Zipped Windows executable (.exe)
 * **[/BOSSA_GUI](./BOSSA_GUI)** - Python3 PyQt5 source (.py)
-* **[/.github/workflows/build.yml](./.github/workflows/build.yml)** - YAML for the GitHub Build Action
-* **[/.github/workflows/release.yml](./.github/workflows/release.yml)** - YAML for the GitHub Release Action
+* **[/.github/workflows/build-windows.yml](./.github/workflows/build-windows.yml)** - YAML for the GitHub Build Action
+* **[/.github/workflows/non-release-build.yml](./.github/workflows/non-release-build.yml)** - YAML for the GitHub Non-Release-Build Action
+  * Builds the zipped executable but does not release it
+  * Click on the repo **Actions** tab and then click on the latest **non-release-build** workflow run. The zipped executable is attached as an Artifact
+* **[/.github/workflows/build-and-release.yml](./.github/workflows/build-and-release.yml)** - YAML for the GitHub Build-And-Release Action
+  * Builds the zipped executable, creates a release and attaches the zip as an Asset
+  * Click on the [Releases](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases) and then click on the latest release. The zipped executable is attached as an Asset
 
 ## License Information
 
