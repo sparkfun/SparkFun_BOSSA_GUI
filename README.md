@@ -4,7 +4,7 @@
   <a href="https://github.com/sparkfun/SparkFun_BOSSA_GUI/issues" alt="Issues">
     <img src="https://img.shields.io/github/issues/sparkfun/SparkFun_BOSSA_GUI.svg" /></a>
   <a href="https://github.com/sparkfun/SparkFun_BOSSA_GUI/actions" alt="Actions">
-    <img src="https://github.com/sparkfun/SparkFun_BOSSA_GUI/actions/workflows/build-windows.yml/badge.svg" /></a>
+    <img src="https://github.com/sparkfun/SparkFun_BOSSA_GUI/actions/workflows/build-and-release.yml/badge.svg" /></a>
   <a href="https://github.com/sparkfun/SparkFun_BOSSA_GUI/blob/main/LICENSE.md" alt="License">
     <img src="https://img.shields.io/badge/license-CC%20BY--SA%204.0-EF9421.svg" /></a>
   <a href="https://twitter.com/intent/follow?screen_name=sparkfun">
