@@ -1,0 +1,70 @@
+# This is a basic workflow to help you get started with Actions
+
+name: build-windows
+
+# Controls when the workflow will run
+on:
+  # this is a called workflow
+  workflow_call:
+    outputs:
+      build-file:
+        description: "The output of this build procsss"
+        value: ${{ jobs.windows-build-job.outputs.install-file }}
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # Build the installer on mac
+  windows-build-job:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+    
+    # Output
+    outputs:
+      install-file: ${{ steps.output-installer.outputs.filename }}
+      
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Setup python
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          pip3 install pyinstaller PyQt5 pyserial
+        
+      # Build the installer
+      - name: Build Windows Installer
+        run: |
+          cd BOSSA_GUI
+          pyinstaller --onefile --clean --noconsole --name BOSSA_GUI --distpath=. --icon=sfe_logo_sm.ico --add-binary="bossac.exe;." --add-binary="sfe_logo_sm.png;." BOSSA_GUI.py
+
+      # Create the zip file                    
+      - name: Compress Installer
+        shell: powershell
+        run: |
+          cd BOSSA_GUI
+          $compress = @{
+            Path = ".\BOSSA_GUI.exe"
+            CompressionLevel = "Fastest"
+            DestinationPath = ".\BOSSA_GUI.win.zip"
+            }
+          Compress-Archive @compress
+        
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: BOSSA_GUI.win.zip
+          path: BOSSA_GUI/BOSSA_GUI.win.zip
+          
+      - id: output-installer
+        run: echo "::set-output name=filename::BOSSA_GUI.win.zip"
+    
+        
+        

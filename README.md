@@ -29,7 +29,7 @@ Our BOSSA GUI is a convenient way to upgrade the firmware on many SAMD21 and SAM
 
 ## BOSSA_GUI Executable
 
-You will find the BOSSA_GUI executable in the [Windows_exe folder](./Windows_exe).
+You will find the zipped BOSSA_GUI executable attached to each [release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases).
 
 ## Thanks
 
@@ -37,9 +37,10 @@ Big thanks go to Scott Shumate (@shumatech) and the contributors to [BOSSA](http
 
 ## Repository Contents
 
-* **[/Windows_exe](./Windows_exe)** - Windows executable (.exe)
+* **[/windows](./windows)** - Zipped Windows executable (.exe)
 * **[/BOSSA_GUI](./BOSSA_GUI)** - Python3 PyQt5 source (.py)
-* **[/.github/workflows/build.yml](./.github/workflows/build.yml)** - YAML for the GitHub Build Action - based on [this how-to](https://data-dive.com/multi-os-deployment-in-cloud-using-pyinstaller-and-github-actions)
+* **[/.github/workflows/build.yml](./.github/workflows/build.yml)** - YAML for the GitHub Build Action
+* **[/.github/workflows/release.yml](./.github/workflows/release.yml)** - YAML for the GitHub Release Action
 
 ## License Information
 

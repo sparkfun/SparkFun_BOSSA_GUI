@@ -17,7 +17,7 @@ You may also need:
 
 Pyinstaller:
 Windows:
-pyinstaller --onefile --clean --noconsole --distpath=./Windows_exe --icon=sfe_logo_sm.ico --add-binary="bossac.exe;." --add-binary="sfe_logo_sm.png;." BOSSA_GUI.py
+pyinstaller --onefile --clean --noconsole --distpath=. --icon=sfe_logo_sm.ico --add-binary="bossac.exe;." --add-binary="sfe_logo_sm.png;." BOSSA_GUI.py
 
 Pyinstaller needs:
 BOSSA_GUI.py (this file!)
