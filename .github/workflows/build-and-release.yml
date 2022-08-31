@@ -9,7 +9,7 @@ on:
     branches:
       - main
     tags:
-      - "v*.*.*"
+      - 'v*.*.*'
 
   # Allows you to run this workflow manually from the Actions tab
   #workflow_dispatch:
@@ -30,9 +30,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ needs.call-windows-build.outputs.build-file }}
+
       - name: Output Listing
         run: ls -la
-        
+
       - name: Publish Release
         uses: softprops/action-gh-release@v1
         with:
