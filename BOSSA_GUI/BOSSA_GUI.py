@@ -4,26 +4,7 @@ https://github.com/shumatech/BOSSA
 The actual read/write/verify is done by bossac.exe.
 
 bossac.exe is a Windows executable. This tool will only work on Windows. Sorry about that.
-
-Please make sure you are using Python3. You will see a bunch of errors with Python2.
-To install PyQt5:
-  pip install PyQt5
-or
-  pip3 install PyQt5
-or
-  sudo apt-get install python3-pyqt5
-You may also need:
-  sudo apt-get install python3-pyqt5.qtserialport
-
-Pyinstaller:
-Windows:
-pyinstaller --onefile --clean --noconsole --distpath=. --icon=sfe_logo_sm.ico --add-binary="bossac.exe;." --add-binary="sfe_logo_sm.png;." BOSSA_GUI.py
-
-Pyinstaller needs:
-BOSSA_GUI.py (this file!)
-sfe_logo_sm.ico (icon file for the .exe)
-sfe_logo_sm.png (icon for the GUI widget)
-bossac.exe (Version 1.9.1-17-g89f3556, copied from Arduino15\packages\arduino\tools\bossac\v1.9.1-arduino2)
+Version 1.9.1-17-g89f3556, copied from Arduino15\packages\arduino\tools\bossac\v1.9.1-arduino2
 
 MIT license
 
@@ -33,7 +14,7 @@ Please see the LICENSE.md for more details
 
 from typing import Iterator, Tuple
 
-from PyQt5.QtCore import QSettings, QProcess, QTimer, Qt, QIODevice, pyqtSlot
+from PyQt5.QtCore import QSettings, QProcess, QTimer, Qt, QIODevice, pyqtSignal, pyqtSlot, QObject
 from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QGridLayout, \
     QPushButton, QApplication, QLineEdit, QFileDialog, QPlainTextEdit, \
     QAction, QActionGroup, QMenu, QMenuBar, QMainWindow, QMessageBox, \
@@ -48,23 +29,50 @@ import serial
 from serial import EIGHTBITS, PARITY_NONE, STOPBITS_ONE
 import time
 
-# Setting constants
-SETTING_PORT_NAME = 'port_name'
-SETTING_FIRMWARE_LOCATION = 'firmware_location'
-SETTING_OFFSET = 'offset'
+_APP_NAME = "BOSSA GUI"
 
-guiVersion = 'v1.0'
-
-def gen_serial_ports() -> Iterator[Tuple[str, str, str]]:
-    """Return all available serial ports."""
-    ports = QSerialPortInfo.availablePorts()
-    return ((p.description(), p.portName(), p.systemLocation()) for p in ports)
+# sub folder for our resource files
+_RESOURCE_DIRECTORY = "resource"
 
 #https://stackoverflow.com/a/50914550
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-    return os.path.join(base_path, relative_path)
+    return os.path.join(base_path, _RESOURCE_DIRECTORY, relative_path)
+
+def get_version(rel_path: str) -> str:
+    try: 
+        with open(resource_path(rel_path), encoding='utf-8') as fp:
+            for line in fp.read().splitlines():
+                if line.startswith("__version__"):
+                    delim = '"' if '"' in line else "'"
+                    return line.split(delim)[1]
+            raise RuntimeError("Unable to find version string.")
+    except:
+        raise RuntimeError("Unable to find _version.py.")
+
+_APP_VERSION = get_version("_version.py")
+
+# Setting constants
+SETTING_PORT_NAME = 'port_name'
+SETTING_FIRMWARE_LOCATION = 'firmware_location'
+SETTING_OFFSET = 'offset'
+
+# ----------------------------------------------------------------
+# hack to know when a combobox menu is being shown. Helpful if contents
+# of list are dynamic -- like serial ports.
+class AUxComboBox(QComboBox):
+
+    popupAboutToBeShown = pyqtSignal()
+
+    def showPopup(self):
+        self.popupAboutToBeShown.emit()
+        super().showPopup()
+
+def gen_serial_ports() -> Iterator[Tuple[str, str, str]]:
+    """Return all available serial ports."""
+    ports = QSerialPortInfo.availablePorts()
+    return ((p.description(), p.portName(), p.systemLocation()) for p in ports)
 
 # noinspection PyArgumentList
 
@@ -91,15 +99,12 @@ class MainWidget(QWidget):
 
         # Port Combobox
         self.port_label = QLabel(self.tr('COM Port:'))
-        self.port_combobox = QComboBox()
+        self.port_combobox = AUxComboBox()
         self.port_label.setBuddy(self.port_combobox)
         self.update_com_ports()
+        self.port_combobox.popupAboutToBeShown.connect(self.on_port_combobox)
 
-        # Refresh Button
-        self.refresh_btn = QPushButton(self.tr('Refresh'))
-        self.refresh_btn.clicked.connect(self.on_refresh_btn_pressed)
-
-        # Port Combobox
+        # Offset Combobox
         self.offset_label = QLabel(self.tr('Offset:'))
         self.offset_combobox = QComboBox()
         self.offset_label.setBuddy(self.offset_combobox)
@@ -129,7 +134,6 @@ class MainWidget(QWidget):
 
         layout.addWidget(self.port_label, 2, 0)
         layout.addWidget(self.port_combobox, 2, 1)
-        layout.addWidget(self.refresh_btn, 2, 3)
 
         layout.addWidget(self.offset_label, 3, 0)
         layout.addWidget(self.offset_combobox, 3, 1)
@@ -200,8 +204,20 @@ class MainWidget(QWidget):
         """Show a Message Box with the warning."""
         QMessageBox.warning(self, QApplication.applicationName(), str(msg))
 
+    # --------------------------------------------------------------
+    # on_port_combobox()
+    #
+    # Called when the combobox pop-up menu is about to be shown
+    #
+    # Use this event to dynamically update the displayed ports
+    #
+    @pyqtSlot()
+    def on_port_combobox(self):
+        self.update_com_ports()
+
     def update_com_ports(self) -> None:
         """Update COM Port list in GUI."""
+
         previousPort = self.port # Record the previous port before we clear the combobox
         
         self.port_combobox.clear()
@@ -220,6 +236,7 @@ class MainWidget(QWidget):
 
     def update_offsets(self) -> None:
         """Update memory offset list in GUI."""
+
         previousOffset = self.offset # Record the previous offset before we clear the combobox
         
         self.offset_combobox.clear()
@@ -258,10 +275,6 @@ class MainWidget(QWidget):
             pass
 
         event.accept()
-
-    def on_refresh_btn_pressed(self) -> None:
-        self.update_com_ports()
-        self.writeMessage("Ports Refreshed\n")
 
     def on_browse_firmware_btn_pressed(self) -> None:
         """Open dialog to select firmware file."""
@@ -432,12 +445,17 @@ class MainWidget(QWidget):
             self.p.finished.connect(self.update_finished)
             self.p.start(resource_path("bossac.exe"), command)
 
-if __name__ == '__main__':
+def startGUI():
+    """Start the GUI"""
     from sys import exit as sysExit
     app = QApplication([])
-    app.setOrganizationName('SparkFun')
-    app.setApplicationName('SparkFun BOSSA GUI ' + guiVersion)
+    app.setOrganizationName('SparkFun Electronics')
+    app.setApplicationName(_APP_NAME + ' - ' + _APP_VERSION)
     app.setWindowIcon(QIcon(resource_path("sfe_logo_sm.png")))
+    app.setApplicationVersion(_APP_VERSION)
     w = MainWidget()
     w.show()
     sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    startGUI()

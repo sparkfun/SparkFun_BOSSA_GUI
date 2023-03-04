@@ -7,9 +7,9 @@ name: non-release-build
 # Controls when the workflow will run
 on:
   # Trigger on push - when a version tag isn't set
-  push:
-    tags-ignore:
-      - 'v*.*.*'
+  #push:
+  #  tags-ignore:
+  #    - 'v*.*.*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

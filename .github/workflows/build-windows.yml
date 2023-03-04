@@ -37,13 +37,13 @@ jobs:
       # Install dependencies
       - name: Install dependencies
         run: |
-          pip3 install pyinstaller PyQt5 pyserial
+          pip3 install pyinstaller pyqt5 pyserial
         
       # Build the installer
       - name: Build Windows Installer
         run: |
           cd BOSSA_GUI
-          pyinstaller --onefile --clean --noconsole --name BOSSA_GUI --distpath=. --icon=sfe_logo_sm.ico --add-binary="bossac.exe;." --add-binary="sfe_logo_sm.png;." BOSSA_GUI.py
+          pyinstaller --onefile --clean --noconsole --name BOSSA_GUI --distpath=. --icon=resource\sfe_logo_sm.ico --add-binary="resource\bossac.exe;." --add-binary="resource\sfe_logo_sm.png;." --add-data="resource\*;resource\" BOSSA_GUI.py
 
       # Create the zip file                    
       - name: Compress Installer
@@ -61,10 +61,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: BOSSA_GUI.win.zip
-          path: BOSSA_GUI/BOSSA_GUI.win.zip
+          path: BOSSA_GUI\BOSSA_GUI.win.zip
           
+      # Use Windows powershell notation: $env:GITHUB_OUTPUT
       - id: output-installer
-        run: echo "::set-output name=filename::BOSSA_GUI.win.zip"
+        run: echo "filename=BOSSA_GUI.win.zip" >> $env:GITHUB_OUTPUT
     
         
         
