@@ -3,7 +3,9 @@
 #      Open Source SAM-BA Programmer
 #     Copyright (C) Dean Camera, 2016.
 #     Copyright (C) Victoria Danchenko, 2019.
+#     Copyright (C) SparkFun, 2023.
 #
+#            Original Author:
 #  dean [at] fourwalledcubicle [dot] com
 #       www.fourwalledcubicle.com
 #
@@ -262,7 +264,7 @@ def startLoader(args):
 			session = Session(samba)
 
 			logging.info('SAMBA Version: %s' % samba.get_version())
-			print('SAMBA Version: %s' % samba.get_version()) # This does a duplicate V# transaction. I guess that's OK...
+			print('SAMBA Version: %s' % samba.get_version()) # This does a full duplicate V# transaction. I guess that's OK...
 
 			# chip recognition by their identifiers
 			# read a special registers from chip
@@ -326,6 +328,8 @@ def startLoader(args):
 				if not result:
 					print('Error while programming')
 					sys.exit(2)
+				else:
+					print('write: success')
 
 			elif args.cmd == 'verify':
 				data = read_from_file(args.f)
@@ -355,7 +359,7 @@ def startLoader(args):
 					print('Error while verifying: address 0x%08X actual 0x%08X expected 0x%08X' % (result[0], result[1], result[2]))
 					sys.exit(2)
 				else:
-					print('Verify: success')
+					print('verify: success')
 
 			elif args.cmd == 'erase':
 				part.erase_chip(parse_number(args.a))
@@ -379,6 +383,6 @@ if __name__ == '__main__':
 	if len(sys.argv) < 2:
 		parser = args_parse(['-h']) #Test args: replace with (e.g.) ['-vvv','-p','COM12','info']
 	else:
-		parser  = args_parse(sys.argv[1:]) #Parse the args
+		parser = args_parse(sys.argv[1:]) #Parse the args
 
 	startLoader(parser)
