@@ -85,7 +85,7 @@ class CortexM0p(Part.PartBase):
 		   erase of the flash from the end of the bootloader area to the end of
 		   the flash.
 		"""
-		self.FLASH_CONTROLLER.erase_flash(self.samba, start_address=self.FLASH_APP_ADDRESS)
+		return self.FLASH_CONTROLLER.erase_flash(self.samba, start_address=self.FLASH_APP_ADDRESS)
 
 
 	def program_flash(self, data, address=None):
@@ -99,7 +99,7 @@ class CortexM0p(Part.PartBase):
 		if address is None:
 			address = self.FLASH_APP_ADDRESS
 
-		self.FLASH_CONTROLLER.program_flash(self.samba, address, data)
+		return self.FLASH_CONTROLLER.program_flash(self.samba, address, data)
 
 
 	def verify_flash(self, data, address=None):

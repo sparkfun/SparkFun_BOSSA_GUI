@@ -8,4 +8,5 @@
 
 from .FlashController import *
 from .NVMCTRL import *
+from .NVMCTRL_D5x import *
 from .EEFCFlash import *

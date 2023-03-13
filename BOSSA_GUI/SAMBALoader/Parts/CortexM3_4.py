@@ -126,9 +126,10 @@ class CortexM3_4(Part.PartBase):
 		pages_address_and_data = self.flash_address_range.get_page_chunks(address, data)
 		for page_index, page_address_and_data in enumerate(pages_address_and_data):
 			if page_address_and_data:
-				if not self.flash_controllers[page_index].verify_flash(page_address_and_data[1], page_address_and_data[0]):
-					return False
-		return True
+				result = self.flash_controllers[page_index].verify_flash(page_address_and_data[1], page_address_and_data[0])
+				if result is not None:
+					return result
+		return None
 
 
 	def read_flash(self, address=None, length=None):

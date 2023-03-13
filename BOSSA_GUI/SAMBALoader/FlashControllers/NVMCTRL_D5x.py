@@ -9,27 +9,27 @@
 from . import FlashController
 
 
-class NVMCTRL(FlashController.FlashControllerBase):
+class NVMCTRL_D5x(FlashController.FlashControllerBase):
 	CTRLA_OFFSET     = 0x0000
 	CTRLB_OFFSET     = 0x0004
 	PARAM_OFFSET     = 0x0008
-	STATUS_OFFSET    = 0x0018
-	INTFLAG_OFFSET   = 0x0014
-	ADDRESS_OFFSET   = 0x001C
+	STATUS_OFFSET    = 0x0012
+	INTFLAG_OFFSET   = 0x0010
+	ADDRESS_OFFSET   = 0x0014
 
-	CTRLB_MANW       = (1 << 7)
-	CTRLB_CACHEDIS   = (1 << 18)
+	CTRLA_CACHEDIS   = (3 << 14)
+	CTRLA_SUSPEN_AUTOWS_MASK = 0xFFCF
 
-	INTFLAG_READY    = (1 << 0)
-	INTFLAG_ERROR    = (1 << 1)
+	STATUSFLAG_READY = (1 << 0)
 
-	CTRLA_CMDA       = {
-		'ER'  : 0x02,
-		'WP'  : 0x04,
-		'PBC' : 0x44,
+	CTRLB_CMD        = {
+		'EP'  : 0x00,
+		'EB'  : 0x01,
+		'WP'  : 0x03,
+		'PBC' : 0x15,
 	}
 
-	PAGES_PER_ROW    = 4
+	PAGES_PER_ROW    = 16
 
 
 	def __init__(self, base_address):
@@ -61,7 +61,7 @@ class NVMCTRL(FlashController.FlashControllerBase):
 		Args:
 			samba -- Core `SAMBA` instance bound to the device.
 		"""
-		while not samba.read_half_word(self.base_address + self.INTFLAG_OFFSET) & self.INTFLAG_READY:
+		while not samba.read_half_word(self.base_address + self.STATUS_OFFSET) & self.STATUSFLAG_READY:
 			pass
 
 
@@ -70,13 +70,13 @@ class NVMCTRL(FlashController.FlashControllerBase):
 
 		Args:
 			samba   -- Core `SAMBA` instance bound to the device.
-			command -- Command value to issue (see `CTRLA_CMDA`)
+			command -- Command value to issue (see `CTRLB_CMD`)
 		"""
 
 		self._wait_while_busy(samba)
 
 		reg  = (0xA5 << 8) | command
-		samba.write_half_word(self.base_address + self.CTRLA_OFFSET, reg)
+		samba.write_half_word(self.base_address + self.CTRLB_OFFSET, reg)
 
 
 	def get_info(self):
@@ -109,7 +109,7 @@ class NVMCTRL(FlashController.FlashControllerBase):
 		for offset in range(start_address, end_address, self.PAGES_PER_ROW * self.page_size):
 			samba.write_word(self.base_address + self.ADDRESS_OFFSET, offset >> 1)
 
-			self._command(samba, self.CTRLA_CMDA['ER'])
+			self._command(samba, self.CTRLB_CMD['EB'])
 			self._wait_while_busy(samba)
 
 
@@ -125,11 +125,12 @@ class NVMCTRL(FlashController.FlashControllerBase):
 		self._get_nvm_params(samba)
 
 		# bossac does a read-modify-write, setting 7 and 18 to disable cache and configure manual page write
-		ctrlb = samba.read_word(self.base_address + self.CTRLB_OFFSET)
-		ctrlb |= self.CTRLB_MANW | self.CTRLB_CACHEDIS
-		samba.write_word(self.base_address + self.CTRLB_OFFSET, ctrlb)
+		ctrla = samba.read_half_word(self.base_address + self.CTRLA_OFFSET)
+		ctrla |= self.CTRLA_CACHEDIS
+		ctrla &= self.CTRLA_SUSPEN_AUTOWS_MASK
+		samba.write_half_word(self.base_address + self.CTRLA_OFFSET, ctrla)
 
-		self._command(samba, self.CTRLA_CMDA['PBC'])
+		self._command(samba, self.CTRLB_CMD['PBC'])
 		self._wait_while_busy(samba)
 
 		for (chunk_address, chunk_data) in self._chunk(self.page_size, address, data):
@@ -137,7 +138,7 @@ class NVMCTRL(FlashController.FlashControllerBase):
 				word = sum([x << (8 * i) for i, x in enumerate(chunk_data[offset : offset + 4])])
 				samba.write_word(chunk_address + offset, word)
 
-			self._command(samba, self.CTRLA_CMDA['WP'])
+			self._command(samba, self.CTRLB_CMD['WP'])
 			self._wait_while_busy(samba)
 		return True
 
