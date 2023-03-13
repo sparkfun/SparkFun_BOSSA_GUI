@@ -22,6 +22,7 @@ class DSU(ChipIdentifier.ChipIdentifierBase):
 		1 : "Cortex-M0+",
 		2 : "Cortex-M3",
 		3 : "Cortex-M4",
+		6 : "Cortex-M4F",
 	}
 	FAMILY = {
 		0 : "SAM D",

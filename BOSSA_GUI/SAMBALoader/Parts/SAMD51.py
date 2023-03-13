@@ -7,17 +7,16 @@
 #
 
 from . import Part
-from . import CortexM0p
+from . import CortexM3_4
 
 
-class ATSAMD21(CortexM0p):
-	"""Part class for all SAMD21 based parts.
-	   Note: this will also return true for SAMR21 devices. TODO: fix this.
+class ATSAMD51(CortexM3_4):
+	"""Part class for all SAMD51 based parts.
 	"""
 
 	@staticmethod
 	def identify(ids):
-		"""Determines if the given chip identifiers positively identify a SAMD21
+		"""Determines if the given chip identifiers positively identify a SAMD51
 		   series device.
 
 		Args:
@@ -25,14 +24,14 @@ class ATSAMD21(CortexM0p):
 			id_values -- Chip identifier values extracted from the part.
 
 		Returns:
-			`True` if the given identifiers suggest the part is a SAMD21
+			`True` if the given identifiers suggest the part is a SAMD51
 			series device.
 		"""
 		
 		result = False
 		try:
 			id_values = ids['DSU']
-			result = id_values.processor == 1 and id_values.family == 0 and id_values.series == 1
+			result = id_values.processor == 6 and id_values.family == 0 and id_values.series == 6
 		except:
 			return False
 		return result

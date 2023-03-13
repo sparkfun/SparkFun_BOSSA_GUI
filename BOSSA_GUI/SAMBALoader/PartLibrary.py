@@ -62,7 +62,6 @@ class PartLibrary(object):
 		'DSU' : [ 0x41002000, ], # Cortex-M0 devices
 		}
 
-
 	@staticmethod
 	def get_chip_ids(samba, addresses=None):
 		"""Reads out the chip identifiers from the attached device. Note that
@@ -100,6 +99,11 @@ class PartLibrary(object):
 			# Cortex-M0 devices have a DSU for additional information, others use a CHIPID
 			if 'M0' in identifiers['CPUID'].PART[identifiers['CPUID'].part]:
 				create_identifier_register(ChipIdentifiers.DSU, 'DSU')
+			elif 'Cortex-M3/Cortex-M4' in identifiers['CPUID'].PART[identifiers['CPUID'].part]:
+				if samba.read_word(0x4) & 0xfff00000 == 0x800000: # SAM4 processors have a reset vector to the SAM-BA ROM
+					create_identifier_register(ChipIdentifiers.CHIPID, 'CHIPID')
+				else:
+					create_identifier_register(ChipIdentifiers.DSU, 'DSU')
 			else:
 				create_identifier_register(ChipIdentifiers.CHIPID, 'CHIPID')
 

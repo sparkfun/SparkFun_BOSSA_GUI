@@ -54,7 +54,10 @@ class CortexM3_4(Part.PartBase):
 			part info as text.
 		"""
 		ret = ''
-		ret += self.flash_controllers[0].get_info()
+		try:
+			ret += self.flash_controllers[0].get_info() # SAMD51 has no flash_controllers - yet
+		except:
+			pass
 		return ret
 
 
