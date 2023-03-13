@@ -362,7 +362,11 @@ def startLoader(args):
 					print('verify: success')
 
 			elif args.cmd == 'erase':
-				part.erase_chip(parse_number(args.a))
+				if part.erase_chip(parse_number(args.a)):
+					print('erase: success')
+				else:
+					print('Error while erasing')
+					sys.exit(2)
 
 			if args.flash_boot:
 				part.set_flash_boot()

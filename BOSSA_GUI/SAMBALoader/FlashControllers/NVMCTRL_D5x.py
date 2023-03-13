@@ -112,6 +112,8 @@ class NVMCTRL_D5x(FlashController.FlashControllerBase):
 			self._command(samba, self.CTRLB_CMD['EB'])
 			self._wait_while_busy(samba)
 
+		return True
+
 
 	def program_flash(self, samba, address, data):
 		"""Program's the device's application area.
