@@ -222,4 +222,4 @@ class AUxWorker(object):
                 status = self.dispatch_job(job)
 
                 # job is finished - let UX know -pass status, action type and job id
-                self._cb_function(self.TYPE_FINISHED, status, job.action_id, job.job_id, job.message, job.sysExit)
+                self._cb_function(self.TYPE_FINISHED, status, job.action_id, job.job_id)

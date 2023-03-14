@@ -116,7 +116,7 @@ class MainWidget(QWidget):
     """Main Widget."""
 
     sig_message = pyqtSignal(str)
-    sig_finished = pyqtSignal(int, str, int, str, int)
+    sig_finished = pyqtSignal(int, str, int)
 
     def __init__(self, parent: QWidget = None) -> None:
         super().__init__(parent)
@@ -233,12 +233,12 @@ class MainWidget(QWidget):
         if msg_type == AUxWorker.TYPE_MESSAGE:
             self.sig_message.emit(args[1])
         elif msg_type == AUxWorker.TYPE_FINISHED:
-            # finished takes 3 args - status, job type, job id and message
-            if len(args) < 6:
+            # finished takes 3 args - status, job type and job id
+            if len(args) < 4:
                 self.writeMessage("Invalid parameters from the SAMBALoader.");
                 return;
 
-            self.sig_finished.emit(args[1], args[2], args[3], args[4], args[5])
+            self.sig_finished.emit(args[1], args[2], args[3])
             
     @pyqtSlot(str)
     def writeMessage(self, msg) -> None:
@@ -247,6 +247,10 @@ class MainWidget(QWidget):
         self.messageBox.appendPlainText(msg)
         self.messageBox.ensureCursorVisible()
         self.messageBox.repaint()
+
+        if "Discovered Part: " in msg:
+            self.processor = msg[17:]
+
 
     @pyqtSlot(str)
     def insertPlainText(self, msg) -> None:
@@ -266,13 +270,12 @@ class MainWidget(QWidget):
     #  Slot for sending the "on finished" signal from the background thread
     #
     #  Called when the backgroudn job is finished and includes a status value
-    @pyqtSlot(int, str, int, str, int)
-    def on_finished(self, status, action_type, job_id, job_message, job_sysExit) -> None:
+    @pyqtSlot(int, str, int)
+    def on_finished(self, status, action_type, job_id) -> None:
 
         # If the part detection is finished, trigger the erase / program
         if action_type == AUxSAMBADetect.ACTION_ID:
-            self.processor = job_message
-            if job_sysExit > 0:
+            if status > 0:
                 self.writeMessage("Part detection failed!")
                 self.disable_interface(False)
             elif self.erase:
@@ -284,7 +287,7 @@ class MainWidget(QWidget):
 
         # If the erase is finished, trigger the program
         elif action_type == AUxSAMBAErase.ACTION_ID:
-            if job_sysExit > 0:
+            if status > 0:
                 self.writeMessage("Erase failed!")
                 self.disable_interface(False)
             else:
@@ -293,7 +296,7 @@ class MainWidget(QWidget):
 
         # If the program is finished, trigger the verify / reset
         elif action_type == AUxSAMBAProgram.ACTION_ID:
-            if job_sysExit > 0:
+            if status > 0:
                 self.writeMessage("Program failed!")
                 self.disable_interface(False)
             elif self.verify:
@@ -305,7 +308,7 @@ class MainWidget(QWidget):
 
         # If the verify is finished, trigger the reset
         elif action_type == AUxSAMBAVerify.ACTION_ID:
-            if job_sysExit > 0:
+            if status > 0:
                 self.writeMessage("Verify failed!")
                 self.disable_interface(False)
             else:

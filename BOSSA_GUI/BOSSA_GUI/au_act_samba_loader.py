@@ -1,5 +1,5 @@
 from .au_action import AxAction, AxJob
-from .SAMBALoader import startLoaderCommand
+from . import SAMBA_Loader
 
 
 #--------------------------------------------------------------------------------------
@@ -15,13 +15,14 @@ class AUxSAMBADetect(AxAction):
     def run_job(self, job:AxJob):
 
         try:
-            sysExit, message = startLoaderCommand(job.command)
-            job.message = message
-            job.sysExit = sysExit
+            sysExit, message = SAMBA_Loader.startLoaderCommand(job.command)
 
         except Exception:
             return 1
 
+        if sysExit > 0:
+            return 1
+        
         return 0
 
 class AUxSAMBAErase(AxAction):
@@ -35,13 +36,14 @@ class AUxSAMBAErase(AxAction):
     def run_job(self, job:AxJob):
 
         try:
-            sysExit, message = startLoaderCommand(job.command)
-            job.message = message
-            job.sysExit = sysExit
+            sysExit, message = SAMBA_Loader.startLoaderCommand(job.command)
 
         except Exception:
             return 1
 
+        if sysExit > 0:
+            return 1
+        
         return 0
 
 class AUxSAMBAProgram(AxAction):
@@ -55,13 +57,14 @@ class AUxSAMBAProgram(AxAction):
     def run_job(self, job:AxJob):
 
         try:
-            sysExit, message = startLoaderCommand(job.command)
-            job.message = message
-            job.sysExit = sysExit
+            sysExit, message = SAMBA_Loader.startLoaderCommand(job.command)
 
         except Exception:
             return 1
 
+        if sysExit > 0:
+            return 1
+        
         return 0
 
 class AUxSAMBAVerify(AxAction):
@@ -75,13 +78,14 @@ class AUxSAMBAVerify(AxAction):
     def run_job(self, job:AxJob):
 
         try:
-            sysExit, message = startLoaderCommand(job.command)
-            job.message = message
-            job.sysExit = sysExit
+            sysExit, message = SAMBA_Loader.startLoaderCommand(job.command)
 
         except Exception:
             return 1
 
+        if sysExit > 0:
+            return 1
+        
         return 0
 
 class AUxSAMBAReset(AxAction):
@@ -95,12 +99,13 @@ class AUxSAMBAReset(AxAction):
     def run_job(self, job:AxJob):
 
         try:
-            sysExit, message = startLoaderCommand(job.command)
-            job.message = message
-            job.sysExit = sysExit
+            sysExit, message = SAMBA_Loader.startLoaderCommand(job.command)
 
         except Exception:
             return 1
 
+        if sysExit > 0:
+            return 1
+        
         return 0
         
