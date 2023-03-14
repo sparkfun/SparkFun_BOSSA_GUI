@@ -22,9 +22,9 @@ try:
 except NameError:
 	# Remap xrange to range for Python 3
 	xrange = range
-import SAMBALoader
-import SAMBALoader.Transports
-from SAMBALoader.FileFormats import BinFormat
+from .SAMBA_Loader import *
+from .SAMBA_Loader.Transports import *
+from .SAMBA_Loader.FileFormats import BinFormat
 
 
 class SessionError(Exception):
@@ -40,7 +40,7 @@ class Session(object):
 
 	def _get_part(self, chip_ids):
 		# find & collect the part classes types by chip ids
-		matched_parts = SAMBALoader.PartLibrary.find_by_chip_ids(chip_ids)
+		matched_parts = SAMBA_Loader.PartLibrary.find_by_chip_ids(chip_ids)
 
 		if len(matched_parts) == 0:
 			raise SessionError('Unknown part.')
@@ -52,7 +52,7 @@ class Session(object):
 
 
 	def _get_file_processor(self, filename):
-		matched_formats = SAMBALoader.FileFormatLibrary.find_by_name(filename)
+		matched_formats = SAMBA_Loader.FileFormatLibrary.find_by_name(filename)
 
 		if len(matched_formats) == 0:
 			raise SessionError('Unknown file format: %s' % filename)
@@ -75,7 +75,7 @@ class Session(object):
 			Dictionary of `{name, identifiers}` for each chip identifier,
 			which can then be used to match against a device.
 		"""
-		return SAMBALoader.PartLibrary.get_chip_ids(self.samba, addresses)
+		return SAMBA_Loader.PartLibrary.get_chip_ids(self.samba, addresses)
 
 
 	def set_part_by_chip_ids(self, chip_ids):
@@ -269,7 +269,7 @@ def startLoader(args):
 		if args.cmd == 'parts':
 			print('Supported parts:')
 			parts_names = []
-			for i in SAMBALoader.PartLibrary.SUPPORTED_PARTS:
+			for i in SAMBA_Loader.PartLibrary.SUPPORTED_PARTS:
 				name = i.get_name() if hasattr(i, 'get_name') else i.__name__
 				if name:
 					parts_names.append(name)
@@ -277,13 +277,13 @@ def startLoader(args):
 				print('{:02} {}'.format(i + 1, v))
 		else:
 			try:
-				transport = SAMBALoader.Transports.SerialTransport(port=args.port)
+				transport = SAMBA_Loader.Transports.SerialTransport(port=args.port)
 			except Exception as e:
 				sysExit = 2
 				message = 'Error: serial transport error: ' + str(e)
 				print(message)
 				return sysExit, message # Return now
-			samba = SAMBALoader.SAMBA(transport, is_usb = not args.serial)
+			samba = SAMBA_Loader.SAMBA(transport, is_usb = not args.serial)
 			session = Session(samba)
 
 			logging.info('SAMBA Version: %s' % samba.get_version())
@@ -345,7 +345,7 @@ def startLoader(args):
 					return sysExit, message # Return now, do not flash_boot or reset
 				try:
 					result = part.program_flash(data, parse_number(args.a))
-				except SAMBALoader.Transports.TimeoutError:
+				except SAMBA_Loader.Transports.TimeoutError:
 					try:
 						port_info = str(samba.transport)
 					except:
@@ -394,7 +394,7 @@ def startLoader(args):
 					return sysExit, message # Return now, do not flash_boot or reset
 				try:
 					result = part.verify_flash(data, parse_number(args.a))
-				except SAMBALoader.Transports.TimeoutError:
+				except SAMBA_Loader.Transports.TimeoutError:
 					try:
 						port_info = str(samba.transport)
 					except:
@@ -444,7 +444,7 @@ def startLoader(args):
 			if args.reset:
 				part.reset()
 
-	except SAMBALoader.Transports.TimeoutError:
+	except SAMBA_Loader.Transports.TimeoutError:
 		logging.error('Timeout while waiting for data.')
 		return 1, 'Error: transport timeout while waiting for data.'
 
@@ -456,6 +456,11 @@ def startLoader(args):
 		sysExit = 0
 		message = 'Success'
 
+	return sysExit, message
+
+def startLoaderCommand(command):
+
+	sysExit, message = startLoader(args_parse(command))
 	return sysExit, message
 
 if __name__ == '__main__':

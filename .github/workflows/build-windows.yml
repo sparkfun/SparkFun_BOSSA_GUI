@@ -25,47 +25,36 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      # Setup python
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      # Install dependencies
-      - name: Install dependencies
+      # Setup python
+      - name: System Setup
         run: |
-          pip3 install pyinstaller pyqt5 pyserial
+          pip3 install pyinstaller pyqt5 darkdetect pyserial
         
       # Build the installer
       - name: Build Windows Installer
         run: |
-          cd BOSSA_GUI
-          pyinstaller --onefile --clean --noconsole --name BOSSA_GUI --distpath=. --icon=resource\sfe_logo_sm.ico --add-binary="resource\bossac.exe;." --add-binary="resource\sfe_logo_sm.png;." --add-data="resource\*;resource\" BOSSA_GUI.py
-
-      # Create the zip file                    
+          pyinstaller --onefile --clean --name RTKUploader --noconsole --distpath=. --icon=RTK_Firmware_Uploader\resource\RTK.ico --add-binary="RTK_Firmware_Uploader\resource\RTK_Surveyor_Partitions_4MB.bin;." --add-binary="RTK_Firmware_Uploader\resource\RTK_Surveyor_Partitions_16MB.bin;." --add-binary="RTK_Firmware_Uploader\resource\RTK_Surveyor.ino.bootloader.bin;." --add-binary="RTK_Firmware_Uploader\resource\boot_app0.bin;." --add-binary="RTK_Firmware_Uploader\resource\RTK.png;." --add-data="RTK_Firmware_Uploader\resource\*;resource\" RTK_Firmware_Upload.py
+                    
       - name: Compress Installer
         shell: powershell
         run: |
-          cd BOSSA_GUI
           $compress = @{
-            Path = ".\BOSSA_GUI.exe"
+            Path = ".\RTKUploader.exe"
             CompressionLevel = "Fastest"
-            DestinationPath = ".\BOSSA_GUI.win.zip"
+            DestinationPath = ".\RTKUploader.win.zip"
             }
           Compress-Archive @compress
         
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v3
         with:
-          name: BOSSA_GUI.win.zip
-          path: BOSSA_GUI\BOSSA_GUI.win.zip
+          name: RTKUploader.win.zip
+          path: RTKUploader.win.zip
           
       # Use Windows powershell notation: $env:GITHUB_OUTPUT
       - id: output-installer
-        run: echo "filename=BOSSA_GUI.win.zip" >> $env:GITHUB_OUTPUT
-    
-        
-        
+        run: echo "filename=RTKUploader.win.zip" >> $env:GITHUB_OUTPUT

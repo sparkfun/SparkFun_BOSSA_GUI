@@ -15,3 +15,4 @@ from . import Parts
 from . import ChipIdentifiers
 from . import FlashControllers
 from . import FileFormats
+from . import Peripheral
