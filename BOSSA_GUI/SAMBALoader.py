@@ -127,15 +127,22 @@ def read_from_file(file_path):
 			from intelhex import IntelHex
 		except ImportError:
 			print('To open HEX files install IntelHex library:\npip install IntelHex\npip3 install IntelHex')
-			sys.exit(3)
+			return None
 		ih = IntelHex()
-		ih.loadhex(file_path)
-		logging.info('Was readed 0x{0:X} ({0}) byte(s): 0x{1:X}..{2:X}'.format(ih.maxaddr() - ih.minaddr() + 1, ih.minaddr(), ih.maxaddr()))
+		try:
+			ih.loadhex(file_path)
+		except:
+			return None
+		if ih.maxaddr() is None:
+			return None
+		logging.info('Read 0x{0:X} ({0}) byte(s): 0x{1:X}..{2:X}'.format(ih.maxaddr() - ih.minaddr() + 1, ih.minaddr(), ih.maxaddr()))
 		return bytearray(ih.gets(ih.minaddr(), ih.maxaddr() - ih.minaddr() + 1))
 	logging.info('Read from binary file "{0}"'.format(file_path))
 	f = BinFormat()
 	f.read(file_path)
-	logging.info('Was readed 0x{0:X} ({0}) byte(s)'.format(len(f.data)))
+	logging.info('Read 0x{0:X} ({0}) byte(s)'.format(len(f.data)))
+	if len(f.data) == 0:
+		return None
 	return f.data
 
 
@@ -214,6 +221,22 @@ def number_to_text(number):
 
 
 def startLoader(args):
+	"""The main method
+
+	Args:
+		args - the command line args [1:] - parsed with args_parse
+
+	Returns:
+		sysExit - the value for sys.exit (if called from __main__)
+		message - a helpful text message:
+			info: the detected part info
+			erase: success / fail
+			write: success / fail
+			read: success / fail
+	"""
+	sysExit = -1 # -1 indicates sysExit has not (yet) been set. The code below will set this to 0, 1, 2.
+	message = '' # 
+
 	# logging.basicConfig(level=logging.WARNING)
 	logging.basicConfig(level=[ logging.WARNING, logging.INFO, logging.DEBUG ][min(args.v, 2)])
 	logging.info('START ' + datetime.now().isoformat())
@@ -241,8 +264,6 @@ def startLoader(args):
 				args.port = '/dev/ttyACM' + args.port
 			elif not args.port.startswith('/'):
 				args.port = '/dev/' + args.port
-	# print(args)
-	# sys.exit(0)
 
 	try:
 		if args.cmd == 'parts':
@@ -258,8 +279,10 @@ def startLoader(args):
 			try:
 				transport = SAMBALoader.Transports.SerialTransport(port=args.port)
 			except Exception as e:
-				print(e)
-				sys.exit(2)
+				sysExit = 2
+				message = 'Error: serial transport error: ' + str(e)
+				print(message)
+				return sysExit, message # Return now
 			samba = SAMBALoader.SAMBA(transport, is_usb = not args.serial)
 			session = Session(samba)
 
@@ -291,6 +314,8 @@ def startLoader(args):
 
 			if args.cmd == 'info':
 				print(part.get_info())
+				sysExit = 0
+				message = 'info: ' + part.get_name()
 
 			elif args.cmd == 'read':
 				if not args.a and not args.l:
@@ -300,9 +325,24 @@ def startLoader(args):
 					save_to_file(args.file, buff)
 				else:
 					sys.stdout.buffer.write(buff)
+				sysExit = 0
+				message = 'read: success'
+				print(message)
 
 			elif args.cmd == 'write':
-				data = read_from_file(args.f)
+				try:
+					data = read_from_file(args.f)
+				except Exception as e:
+					sysExit = 2
+					message = 'Error: could not read file {}:'.format(args.f)
+					message += ' ' + str(e)
+					print(message)
+					return sysExit, message # Return now, do not flash_boot or reset
+				if data is None:
+					sysExit = 2
+					message = 'Error: file {} is empty or invalid'.format(args.f)
+					print(message)
+					return sysExit, message # Return now, do not flash_boot or reset
 				try:
 					result = part.program_flash(data, parse_number(args.a))
 				except SAMBALoader.Transports.TimeoutError:
@@ -312,9 +352,10 @@ def startLoader(args):
 						port_info = ''
 					else:
 						port_info = ' ({})'.format(port_info)
-					print('Error while programming{}:'.format(port_info))
-					print('Timeout happened'.format(port_info))
-					sys.exit(1)
+					sysExit = 1
+					message = 'Error: programming error on port {}. Timeout'.format(port_info)
+					print(message)
+					return sysExit, message # Return now, do not flash_boot or reset
 				except Exception as e:
 					try:
 						port_info = str(samba.transport)
@@ -322,17 +363,35 @@ def startLoader(args):
 						port_info = ''
 					else:
 						port_info = ' ({})'.format(port_info)
-					print('Error while programming{}:'.format(port_info))
-					print(e)
-					sys.exit(2)
+					sysExit = 2
+					message = 'Error: programming error on port {}:'.format(port_info)
+					message += ' ' + str(e)
+					print(message)
+					return sysExit, message # Return now, do not flash_boot or reset
 				if not result:
-					print('Error while programming')
-					sys.exit(2)
+					sysExit = 2
+					message = 'Error: programming error'
+					print(message)
+					return sysExit, message # Return now, do not flash_boot or reset
 				else:
-					print('write: success')
+					sysExit = 0
+					message = 'write: success'
+					print(message)
 
 			elif args.cmd == 'verify':
-				data = read_from_file(args.f)
+				try:
+					data = read_from_file(args.f)
+				except Exception as e:
+					sysExit = 2
+					message = 'Error: could not read file {}:'.format(args.f)
+					message += ' ' + str(e)
+					print(message)
+					return sysExit, message # Return now, do not flash_boot or reset
+				if data is None:
+					sysExit = 2
+					message = 'Error: file {} is empty or invalid'.format(args.f)
+					print(message)
+					return sysExit, message # Return now, do not flash_boot or reset
 				try:
 					result = part.verify_flash(data, parse_number(args.a))
 				except SAMBALoader.Transports.TimeoutError:
@@ -342,9 +401,10 @@ def startLoader(args):
 						port_info = ''
 					else:
 						port_info = ' ({})'.format(port_info)
-					print('Error while verifying{}:'.format(port_info))
-					print('Timeout happened'.format(port_info))
-					sys.exit(1)
+					sysExit = 1
+					message = 'Error: verify error on port {}. Timeout'.format(port_info)
+					print(message)
+					return sysExit, message # Return now, do not flash_boot or reset
 				except Exception as e:
 					try:
 						port_info = str(samba.transport)
@@ -352,21 +412,31 @@ def startLoader(args):
 						port_info = ''
 					else:
 						port_info = ' ({})'.format(port_info)
-					print('Error while verifying{}:'.format(port_info))
-					print(e)
-					sys.exit(2)
+					sysExit = 2
+					message = 'Error: verify error on port {}:'.format(port_info)
+					message += ' ' + str(e)
+					print(message)
+					return sysExit, message # Return now, do not flash_boot or reset
 				if result is not None:
-					print('Error while verifying: address 0x%08X actual 0x%08X expected 0x%08X' % (result[0], result[1], result[2]))
-					sys.exit(2)
+					sysExit = 2
+					message = 'Error: verify error at address 0x%08X actual 0x%08X expected 0x%08X' % (result[0], result[1], result[2])
+					print(message)
+					return sysExit, message # Return now, do not flash_boot or reset
 				else:
-					print('verify: success')
+					sysExit = 0
+					message = 'verify: success'
+					print(message)
 
 			elif args.cmd == 'erase':
 				if part.erase_chip(parse_number(args.a)):
-					print('erase: success')
+					sysExit = 0
+					message = 'erase: success'
+					print(message)
 				else:
-					print('Error while erasing')
-					sys.exit(2)
+					sysExit = 2
+					message = 'Error: erase failed'
+					print(message)
+					return sysExit, message # Return now, do not flash_boot or reset
 
 			if args.flash_boot:
 				part.set_flash_boot()
@@ -376,11 +446,17 @@ def startLoader(args):
 
 	except SAMBALoader.Transports.TimeoutError:
 		logging.error('Timeout while waiting for data.')
-		sys.exit(1)
+		return 1, 'Error: transport timeout while waiting for data.'
 
 	except SessionError as e:
 		logging.error(str(e))
-		sys.exit(1)
+		return 1, 'Error: session error ' + str(e)
+
+	if sysExit < 0:
+		sysExit = 0
+		message = 'Success'
+
+	return sysExit, message
 
 if __name__ == '__main__':
 
@@ -389,4 +465,6 @@ if __name__ == '__main__':
 	else:
 		parser = args_parse(sys.argv[1:]) #Parse the args
 
-	startLoader(parser)
+	sysExit, message = startLoader(parser)
+
+	sys.exit(sysExit)

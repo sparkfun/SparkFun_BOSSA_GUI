@@ -193,4 +193,17 @@ class NVMCTRL(FlashController.FlashControllerBase):
 		if length is None:
 			length = (self.pages * self.page_size) - address
 
-		return samba.read_block(address, length)
+		if (length < 32):
+			return samba.read_block(address, length)
+
+		actual_data = bytearray(0)
+		readBytes = 0
+
+		while readBytes < (length - 32):
+			actual_data += samba.read_block(address + readBytes, 32) # Read in chunks of 32
+			readBytes += 32
+
+		if (readBytes < length):
+			actual_data += samba.read_block(address + readBytes, length - readBytes) # Read final chunk
+
+		return actual_data
