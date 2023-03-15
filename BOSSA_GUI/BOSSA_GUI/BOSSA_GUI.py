@@ -166,10 +166,10 @@ class MainWidget(QWidget):
         self.messages_label = QLabel(self.tr('Status / Warnings:'))
 
         # Messages Window
-        messageFont=QFont("Courier")
         self.messageBox = QPlainTextEdit()
-        self.messageBox.setFont(messageFont)
-        color =  "C0C0C0" if ux_is_darkmode() else "424242"
+        #messageFont=QFont("Courier")
+        #self.messageBox.setFont(messageFont)
+        color = "C0C0C0" if ux_is_darkmode() else "424242"
         self.messageBox.setStyleSheet("QPlainTextEdit { color: #" + color + ";}")
         self.messageBox.setReadOnly(True)
         self.messageBox.clear()
@@ -458,7 +458,7 @@ class MainWidget(QWidget):
     # Enable/Disable portions of the ux - often used when a job is running
     #
     def disable_interface(self, bDisable=False):
-
+        """Disable the upload button until all jobs are complete"""
         self.upload_btn.setDisabled(bDisable)
 
     def on_upload_btn_pressed(self) -> None:
@@ -509,8 +509,16 @@ class MainWidget(QWidget):
             except (ValueError, IOError) as err:
                 self.writeMessage(str(err))
                 return
+            
+            port.write(0xFF)
 
+            time.sleep(0.1)
             port.setDTR(False) # Reset the SAMD
+            time.sleep(0.1)
+            port.setDTR(True)
+            time.sleep(0.1)
+            port.setDTR(False)
+            time.sleep(0.1)
             port.close()
 
             time.sleep(0.4)
@@ -532,6 +540,8 @@ class MainWidget(QWidget):
                     keepGoing = False
                 else:
                     time.sleep(0.25)
+
+                QApplication.processEvents()
 
             time.sleep(0.25)
 
@@ -561,6 +571,8 @@ class MainWidget(QWidget):
 
                 if keepGoing:
                     time.sleep(0.25)
+
+                QApplication.processEvents()
 
             if keepGoing:
                 self.writeMessage("Port has not changed. Trying " + self.portActual)
