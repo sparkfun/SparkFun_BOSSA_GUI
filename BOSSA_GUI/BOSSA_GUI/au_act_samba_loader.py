@@ -1,5 +1,5 @@
 from .au_action import AxAction, AxJob
-from . import SAMBA_Loader
+from .SAMBALoad import startLoaderCommand as loader
 
 
 #--------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ class AUxSAMBADetect(AxAction):
     def run_job(self, job:AxJob):
 
         try:
-            sysExit, message = SAMBA_Loader.startLoaderCommand(job.command)
+            sysExit, message = loader(job.command)
 
         except Exception:
             return 1
@@ -36,7 +36,7 @@ class AUxSAMBAErase(AxAction):
     def run_job(self, job:AxJob):
 
         try:
-            sysExit, message = SAMBA_Loader.startLoaderCommand(job.command)
+            sysExit, message = loader(job.command)
 
         except Exception:
             return 1
@@ -57,7 +57,7 @@ class AUxSAMBAProgram(AxAction):
     def run_job(self, job:AxJob):
 
         try:
-            sysExit, message = SAMBA_Loader.startLoaderCommand(job.command)
+            sysExit, message = loader(job.command)
 
         except Exception:
             return 1
@@ -78,7 +78,7 @@ class AUxSAMBAVerify(AxAction):
     def run_job(self, job:AxJob):
 
         try:
-            sysExit, message = SAMBA_Loader.startLoaderCommand(job.command)
+            sysExit, message = loader(job.command)
 
         except Exception:
             return 1
@@ -99,7 +99,7 @@ class AUxSAMBAReset(AxAction):
     def run_job(self, job:AxJob):
 
         try:
-            sysExit, message = SAMBA_Loader.startLoaderCommand(job.command)
+            sysExit, message = loader(job.command)
 
         except Exception:
             return 1

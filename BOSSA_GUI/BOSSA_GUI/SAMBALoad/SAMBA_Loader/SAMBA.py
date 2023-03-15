@@ -59,6 +59,8 @@ class SAMBA(object):
 		self.transport.write(self._serialize_command(SAMBACommands.SET_NORMAL_MODE, arguments=[]))
 		self.transport.read(2, True) # Ignore a timeout here
 
+	def __del__(self):
+		self.transport.serialport.close()
 
 	def _to_32bit_hex(self, value):
 		"""Internal helper function to convert a 32-bit value into a hex string,

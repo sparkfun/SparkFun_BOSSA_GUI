@@ -196,7 +196,7 @@ class AUxWorker(object):
                 try:
                     # run the action
                     return self._actions[job.action_id].run_job(job)
-                except SystemExit as  error:
+                except SystemExit as error:
                     # some scripts call exit(), even if not an error
                     self.message("Complete.")
 

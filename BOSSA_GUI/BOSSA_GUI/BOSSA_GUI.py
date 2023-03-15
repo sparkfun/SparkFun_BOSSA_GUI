@@ -279,9 +279,11 @@ class MainWidget(QWidget):
                 self.writeMessage("Part detection failed!")
                 self.disable_interface(False)
             elif self.erase:
+                self.writeMessage("Part detected: " + self.processor)
                 self.writeMessage("Part detection complete. Erasing...")
                 self.do_erase()
             else:
+                self.writeMessage("Part detected: " + self.processor)
                 self.writeMessage("Part detection complete. Programming...")
                 self.do_program()
 
@@ -571,6 +573,8 @@ class MainWidget(QWidget):
 
         self.writeMessage("\nDetecting processor\n")
 
+        time.sleep(2.0)
+
         command = []
         command.extend(["-p",self.portActual])
         command.append("info")
@@ -602,8 +606,9 @@ class MainWidget(QWidget):
         except:
             pass
 
-        sleep(1.0);
         self.writeMessage("Erasing processor\n")
+
+        time.sleep(2.0)
 
         command = []
         command.extend(["-p",self.portActual])
@@ -633,7 +638,7 @@ class MainWidget(QWidget):
 
         fileExists = False
         try:
-            f = open(self.theFileName)
+            f = open(self.theFirmwareName)
             fileExists = True
         except IOError:
             fileExists = False
@@ -649,8 +654,9 @@ class MainWidget(QWidget):
         except:
             pass
 
-        sleep(1.0);
         self.writeMessage("Uploading firmware\n")
+
+        time.sleep(2.0)
 
         command = []
         command.extend(["-p",self.portActual])
@@ -659,7 +665,7 @@ class MainWidget(QWidget):
             command.extend(["-a","0x2000"])
         elif "SAMD51" in self.processor:
             command.extend(["-a","0x4000"])
-        command.extend(["-f",self.theFileName])
+        command.extend(["-f",self.theFirmwareName])
 
         # Create a job and add it to the job queue. The worker thread will pick this up and
         # process the job. Can set job values using dictionary syntax, or attribute assignments
@@ -685,7 +691,7 @@ class MainWidget(QWidget):
 
         fileExists = False
         try:
-            f = open(self.theFileName)
+            f = open(self.theFirmwareName)
             fileExists = True
         except IOError:
             fileExists = False
@@ -701,8 +707,9 @@ class MainWidget(QWidget):
         except:
             pass
 
-        sleep(1.0);
         self.writeMessage("Verifying firmware\n")
+
+        time.sleep(2.0)
 
         command = []
         command.extend(["-p",self.portActual])
@@ -711,7 +718,7 @@ class MainWidget(QWidget):
             command.extend(["-a","0x2000"])
         elif "SAMD51" in self.processor:
             command.extend(["-a","0x4000"])
-        command.extend(["-f",self.theFileName])
+        command.extend(["-f",self.theFirmwareName])
 
         # Create a job and add it to the job queue. The worker thread will pick this up and
         # process the job. Can set job values using dictionary syntax, or attribute assignments
@@ -740,8 +747,9 @@ class MainWidget(QWidget):
         except:
             pass
 
-        sleep(1.0);
         self.writeMessage("Resetting processor\n")
+
+        time.sleep(2.0)
 
         command = []
         command.extend(["-p",self.portActual])
