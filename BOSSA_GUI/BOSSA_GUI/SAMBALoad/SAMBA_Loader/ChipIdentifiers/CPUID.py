@@ -56,10 +56,11 @@ class CPUID(ChipIdentifier.ChipIdentifierBase):
 		"""
 
 		ret = 'CPUID @ 0x{:08X}: 0x{:08X}'.format(self.base_address, self.chip_id)
-		ret += "\n\tImplementer:\t" + self._lookup(self.IMPLEMENTER, self.implementer)
-		ret += "\n\tArchitecture:\t" + self._lookup(self.ARCHITECTURE, self.architecture)
-		ret += "\n\tVersion:\t" + "r%dp%d" % (self.variant, self.revision)
-		ret += "\n\tPart:\t\t" + self._lookup(self.PART, self.part)
+		ret += "\nImplementer:  " + self._lookup(self.IMPLEMENTER, self.implementer)
+		ret += "\nArchitecture: " + self._lookup(self.ARCHITECTURE, self.architecture)
+		ret += "\nPart:         " + self._lookup(self.PART, self.part)
+		ret += "\nVariant:      " + str(self.variant)
+		ret += "\nRevision:     " + str(self.revision)
 		return ret
 
 

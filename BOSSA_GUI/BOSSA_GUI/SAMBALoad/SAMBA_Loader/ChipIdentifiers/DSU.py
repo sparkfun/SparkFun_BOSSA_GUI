@@ -52,14 +52,14 @@ class DSU(ChipIdentifier.ChipIdentifierBase):
 			printing to a console.
 		"""
 
-		info  = "\n\tProcessor:\t" + self._lookup(self.PROCESSOR, self.processor)
-		info += "\n\tFamily:\t\t" + self._lookup(self.FAMILY, self.family)
-		info += "\n\tSeries:\t\t" + str(self.series)
-		info += "\n\tDie:\t\t" + str(self.die)
-		info += "\n\tRevision:\t" + str(self.revision)
-		info += "\n\tVariant:\t" + str(self.variant)
+		ret  = "\nProcessor:    " + self._lookup(self.PROCESSOR, self.processor)
+		ret += "\nFamily:       " + self._lookup(self.FAMILY, self.family)
+		ret += "\nSeries:       " + str(self.series)
+		ret += "\nDie:          " + str(self.die)
+		ret += "\nVariant:      " + str(self.variant)
+		ret += "\nRevision:     " + str(self.revision)
 
-		return info
+		return ret
 
 
 	def _lookup(self, table, value):

@@ -128,13 +128,13 @@ class CHIPID(ChipIdentifier.ChipIdentifierBase):
 		"""
 
 		ret = 'CHIPID @ 0x{:08X}: 0x{:08X}'.format(self.base_address, self.chip_id)
-		ret += '\n\tVersion:\t' + str(self.version)
-		ret += '\n\tProcessor:\t' + self._lookup(self.PROCESSOR, self.processor)
-		ret += '\n\tArchitecture:\t' + self._lookup(self.ARCHITECTURE, self.architecture)
-		ret += '\n\tFlash Bank 0:\t' + self._lookup(self.FLASH_BANK_SIZE, self.flash[0])
-		ret += '\n\tFlash Bank 1:\t' + self._lookup(self.FLASH_BANK_SIZE, self.flash[1])
-		ret += '\n\tSRAM:\t\t' + self._lookup(self.SRAM_SIZE, self.sram)
-		ret += '\n\tExtended ID:\t' + str(self.extended_chip_id)
+		ret += '\nVersion:      ' + str(self.version)
+		ret += '\nProcessor:    ' + self._lookup(self.PROCESSOR, self.processor)
+		ret += '\nArchitecture: ' + self._lookup(self.ARCHITECTURE, self.architecture)
+		ret += '\nFlash Bank 0: ' + self._lookup(self.FLASH_BANK_SIZE, self.flash[0])
+		ret += '\nFlash Bank 1: ' + self._lookup(self.FLASH_BANK_SIZE, self.flash[1])
+		ret += '\nSRAM:         ' + self._lookup(self.SRAM_SIZE, self.sram)
+		ret += '\nExtended ID:  ' + str(self.extended_chip_id)
 		return ret
 
 
