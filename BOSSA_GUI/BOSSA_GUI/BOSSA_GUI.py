@@ -633,6 +633,10 @@ class MainWidget(QWidget):
         command = []
         command.extend(["-p",self.portActual])
         command.append("erase")
+        if "SAMD21" in self.processor:
+            command.extend(["-a","0x2000"])
+        elif "SAMD51" in self.processor:
+            command.extend(["-a","0x4000"])
 
         # Create a job and add it to the job queue. The worker thread will pick this up and
         # process the job. Can set job values using dictionary syntax, or attribute assignments
