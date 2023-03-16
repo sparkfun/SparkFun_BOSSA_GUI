@@ -39,23 +39,23 @@ jobs:
       - name: Build Windows Installer
         run: |
           cd BOSSA_GUI
-          pyinstaller --onefile --clean --name BOSSA_GUI --noconsole --distpath=. --icon=BOSSA_GUI\resource\sfe_logo_sm.ico --add-binary="BOSSA_GUI\resource\sfe_logo_sm.png;." --add-data="BOSSA_GUI\resource\*;resource\" BOSSA__GUI.py
+          pyinstaller --onefile --clean --name BOSSA__GUI --noconsole --distpath=. --icon=BOSSA_GUI\resource\sfe_logo_sm.ico --add-binary="BOSSA_GUI\resource\sfe_logo_sm.png;." --add-data="BOSSA_GUI\resource\*;resource\" BOSSA__GUI.py
                     
       - name: Compress Installer
         shell: powershell
         run: |
           $compress = @{
-            Path = ".\BOSSA_GUI\BOSSA_GUI.exe"
+            Path = ".\BOSSA_GUI\BOSSA__GUI.exe"
             CompressionLevel = "Fastest"
-            DestinationPath = ".\BOSSA_GUI\BOSSA_GUI.win.zip"
+            DestinationPath = ".\BOSSA_GUI\BOSSA__GUI.win.zip"
             }
           Compress-Archive @compress
         
       - uses: actions/upload-artifact@v3
         with:
-          name: BOSSA_GUI\BOSSA_GUI.win.zip
-          path: BOSSA_GUI\BOSSA_GUI.win.zip
+          name: BOSSA_GUI/BOSSA__GUI.win.zip
+          path: BOSSA_GUI/BOSSA__GUI.win.zip
           
       # Use Windows powershell notation: $env:GITHUB_OUTPUT
       - id: output-installer
-        run: echo "filename=BOSSA_GUI\BOSSA_GUI.win.zip" >> $env:GITHUB_OUTPUT
+        run: echo "filename=BOSSA_GUI/BOSSA__GUI.win.zip" >> $env:GITHUB_OUTPUT

@@ -39,14 +39,14 @@ jobs:
       - name: Build Linux Installer
         run: |
           cd BOSSA_GUI
-          pyinstaller --onefile --clean --name BOSSA_GUI --noconsole --distpath=. --icon=BOSSA_GUI/resource/sfe_logo_sm.ico --add-binary="BOSSA_GUI/resource/sfe_logo_sm.png:." --add-data="BOSSA_GUI/resource/*:resource/" BOSSA__GUI.py
-          gzip BOSSA_GUI
-          mv BOSSA_GUI.gz BOSSA_GUI.linux.gz
+          pyinstaller --onefile --clean --name BOSSA__GUI --noconsole --distpath=. --icon=BOSSA_GUI/resource/sfe_logo_sm.ico --add-binary="BOSSA_GUI/resource/sfe_logo_sm.png:." --add-data="BOSSA_GUI/resource/*:resource/" BOSSA__GUI.py
+          gzip BOSSA__GUI
+          mv BOSSA__GUI.gz BOSSA__GUI.linux.gz
           
       - uses: actions/upload-artifact@v3
         with:
-          name: BOSSA_GUI/BOSSA_GUI.linux.gz
-          path: BOSSA_GUI/BOSSA_GUI.linux.gz
+          name: BOSSA_GUI/BOSSA__GUI.linux.gz
+          path: BOSSA_GUI/BOSSA__GUI.linux.gz
 
       - id: output-installer
-        run: echo "filename=BOSSA_GUI/BOSSA_GUI.linux.gz" >> $GITHUB_OUTPUT
+        run: echo "filename=BOSSA_GUI/BOSSA__GUI.linux.gz" >> $GITHUB_OUTPUT

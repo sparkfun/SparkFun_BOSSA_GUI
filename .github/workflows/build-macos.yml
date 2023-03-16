@@ -40,17 +40,17 @@ jobs:
       - name: Build Mac Installer
         run: |
           cd BOSSA_GUI
-          pyinstaller --windowed -n BOSSA_GUI --noconsole --distpath=. --icon=BOSSA_GUI/resource/sfe_logo_sm.ico --add-binary="BOSSA_GUI/resource/sfe_logo_sm.png:." --add-data="BOSSA_GUI/resource/*:resource/" BOSSA__GUI.py
+          pyinstaller --windowed -n BOSSA__GUI --noconsole --distpath=. --icon=BOSSA_GUI/resource/sfe_logo_sm.ico --add-binary="BOSSA_GUI/resource/sfe_logo_sm.png:." --add-data="BOSSA_GUI/resource/*:resource/" BOSSA__GUI.py
           mkdir tmp
-          mv "BOSSA_GUI.app" "tmp/"
-          create-dmg --volicon "BOSSA_GUI/resource/sparkdisk.icns" --background "BOSSA_GUI/resource/sfe_logo_sm.png" --hide-extension "BOSSA_GUI.app" --icon "BOSSA_GUI.app" 100 100 --window-size 600 440 --app-drop-link 400 100 "BOSSA_GUI.dmg" "tmp/"
+          mv "BOSSA__GUI.app" "tmp/"
+          create-dmg --volicon "BOSSA_GUI/resource/sparkdisk.icns" --background "BOSSA_GUI/resource/sfe_logo_sm.png" --hide-extension "BOSSA__GUI.app" --icon "BOSSA__GUI.app" 100 100 --window-size 600 440 --app-drop-link 400 100 "BOSSA__GUI.dmg" "tmp/"
           
       - uses: actions/upload-artifact@v3
         with:
-          name: BOSSA_GUI/BOSSA_GUI.dmg
-          path: BOSSA_GUI/BOSSA_GUI.dmg
+          name: BOSSA_GUI/BOSSA__GUI.dmg
+          path: BOSSA_GUI/BOSSA__GUI.dmg
 
       - id: output-installer
-        run: echo "filename=BOSSA_GUI/BOSSA_GUI.dmg" >> $GITHUB_OUTPUT
+        run: echo "filename=BOSSA_GUI/BOSSA__GUI.dmg" >> $GITHUB_OUTPUT
         
         
