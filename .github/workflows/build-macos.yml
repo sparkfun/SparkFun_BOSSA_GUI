@@ -47,10 +47,10 @@ jobs:
           
       - uses: actions/upload-artifact@v3
         with:
-          name: BOSSA_GUI.dmg
-          path: BOSSA_GUI.dmg
+          name: BOSSA_GUI/BOSSA_GUI.dmg
+          path: BOSSA_GUI/BOSSA_GUI.dmg
 
       - id: output-installer
-        run: echo "filename=BOSSA_GUI.dmg" >> $GITHUB_OUTPUT
+        run: echo "filename=BOSSA_GUI/BOSSA_GUI.dmg" >> $GITHUB_OUTPUT
         
         

@@ -48,14 +48,14 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: python-install-package
-          path: dist
+          path: BOSSA_GUI/dist
 
       - name: Extract package name
         run: |
-          cd dist
+          cd BOSSA_GUI/dist
           echo "PACKAGE_NAME=$(ls *.tar.gz)" >> $GITHUB_ENV
 
       - id: output-installer
         run: |
-          echo "filename=python-install-package" >> $GITHUB_OUTPUT
-          echo "packagename=${{ env.PACKAGE_NAME }}" >> $GITHUB_OUTPUT
+          echo "filename=BOSSA_GUI/python-install-package" >> $GITHUB_OUTPUT
+          echo "packagename=BOSSA_GUI/${{ env.PACKAGE_NAME }}" >> $GITHUB_OUTPUT
