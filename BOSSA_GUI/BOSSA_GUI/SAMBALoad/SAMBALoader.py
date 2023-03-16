@@ -482,7 +482,7 @@ def startLoaderCommand(command):
 if __name__ == '__main__':
 
 	if len(sys.argv) < 2:
-		parser = args_parse(['-h']) #Test args: replace with (e.g.) ['-vvv','-p','COM12','info']
+		parser = args_parse(['-h']) #Test args: replace with (e.g.) ['-vv','-p','COM12','info']
 	else:
 		parser = args_parse(sys.argv[1:]) #Parse the args
 
