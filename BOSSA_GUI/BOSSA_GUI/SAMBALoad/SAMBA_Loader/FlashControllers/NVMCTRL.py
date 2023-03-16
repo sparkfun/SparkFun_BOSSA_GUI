@@ -137,7 +137,7 @@ class NVMCTRL(FlashController.FlashControllerBase):
 		self._command(samba, self.CTRLA_CMDA['PBC'])
 		self._wait_while_busy(samba)
 
-		logging.info('Program Flash: Start 0x{0:X} Length {1:X}'.format(address, len(data)))
+		logging.info('Program Flash: Start 0x{0:X} Length 0x{1:X}'.format(address, len(data)))
 
 		for (chunk_address, chunk_data) in self._chunk(self.page_size, address, data):
 			for offset in range(0, len(chunk_data), 4):
@@ -165,7 +165,7 @@ class NVMCTRL(FlashController.FlashControllerBase):
 
 		self._get_nvm_params(samba)
 
-		logging.info('Verify Flash: Start 0x{0:X} Length {1:X}'.format(address, len(data)))
+		logging.info('Verify Flash: Start 0x{0:X} Length 0x{1:X}'.format(address, len(data)))
 
 		# From bossac:
 		# "The SAM firmware has a bug reading powers of 2 over 32 bytes via USB."
@@ -200,7 +200,7 @@ class NVMCTRL(FlashController.FlashControllerBase):
 		if length is None:
 			length = (self.pages * self.page_size) - address
 
-		logging.info('Read Flash: Start 0x{0:X} Length {1:X}'.format(address, length))
+		logging.info('Read Flash: Start 0x{0:X} Length 0x{1:X}'.format(address, length))
 
 		if (length < 32):
 			return samba.read_block(address, length)
