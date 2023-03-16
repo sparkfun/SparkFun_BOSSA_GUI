@@ -101,7 +101,7 @@ class PartBase(object):
 
 
 	@abc.abstractmethod
-	def erase_chip(self, samba):
+	def erase_chip(self, samba, address=None):
 		"""Erases the device's application area.
 
 		Args:
