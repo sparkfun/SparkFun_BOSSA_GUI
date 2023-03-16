@@ -47,7 +47,7 @@ jobs:
           
       - uses: actions/upload-artifact@v3
         with:
-          name: BOSSA_GUI/BOSSA__GUI.dmg
+          name: BOSSA__GUI.dmg
           path: BOSSA_GUI/BOSSA__GUI.dmg
 
       - id: output-installer

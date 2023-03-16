@@ -1,3 +1,2 @@
 include BOSSA_GUI/resource/*.*
-include BOSSA_GUI/SAMBALoad/*.*
 include DESCRIPTION.md

@@ -53,7 +53,7 @@ jobs:
         
       - uses: actions/upload-artifact@v3
         with:
-          name: BOSSA_GUI/BOSSA__GUI.win.zip
+          name: BOSSA__GUI.win.zip
           path: BOSSA_GUI/BOSSA__GUI.win.zip
           
       # Use Windows powershell notation: $env:GITHUB_OUTPUT

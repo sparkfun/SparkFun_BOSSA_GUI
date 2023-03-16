@@ -45,7 +45,7 @@ jobs:
           
       - uses: actions/upload-artifact@v3
         with:
-          name: BOSSA_GUI/BOSSA__GUI.linux.gz
+          name: BOSSA__GUI.linux.gz
           path: BOSSA_GUI/BOSSA__GUI.linux.gz
 
       - id: output-installer

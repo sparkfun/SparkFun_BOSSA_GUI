@@ -99,7 +99,7 @@ setuptools.setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages=["BOSSA_GUI", "BOSSA_GUI/resource"],
+    packages=["BOSSA_GUI", "BOSSA_GUI/resource", "BOSSA_GUI/SAMBALoad", "BOSSA_GUI/SAMBALoad/SAMBA_Loader", "BOSSA_GUI/SAMBALoad/SAMBA_Loader/ChipIdentifiers", "BOSSA_GUI/SAMBALoad/SAMBA_Loader/FileFormats", "BOSSA_GUI/SAMBALoad/SAMBA_Loader/FlashControllers", "BOSSA_GUI/SAMBALoad/SAMBA_Loader/Parts", "BOSSA_GUI/SAMBALoad/SAMBA_Loader/Peripheral", "BOSSA_GUI/SAMBALoad/SAMBA_Loader/Transports"],
 
     # List run-time dependencies here.  These will be installed by pip when your
     # project is installed. For an analysis of "install_requires" vs pip's
