@@ -116,7 +116,7 @@ class MainWidget(QWidget):
     """Main Widget."""
 
     sig_message = pyqtSignal(str)
-    sig_finished = pyqtSignal(int, str, int)
+    sig_finished = pyqtSignal(int, str, int, dict)
 
     def __init__(self, parent: QWidget = None) -> None:
         super().__init__(parent)
@@ -233,12 +233,12 @@ class MainWidget(QWidget):
         if msg_type == AUxWorker.TYPE_MESSAGE:
             self.sig_message.emit(args[1])
         elif msg_type == AUxWorker.TYPE_FINISHED:
-            # finished takes 3 args - status, job type and job id
-            if len(args) < 4:
+            # finished takes 4 args - status, job type, job id and info
+            if len(args) < 5:
                 self.writeMessage("Invalid parameters from the SAMBALoader.");
                 return;
 
-            self.sig_finished.emit(args[1], args[2], args[3])
+            self.sig_finished.emit(args[1], args[2], args[3], args[4])
             
     @pyqtSlot(str)
     def writeMessage(self, msg) -> None:
@@ -247,10 +247,6 @@ class MainWidget(QWidget):
         self.messageBox.appendPlainText(msg)
         self.messageBox.ensureCursorVisible()
         self.messageBox.repaint()
-
-        if "Discovered Part: " in msg:
-            self.processor = msg[17:]
-
 
     @pyqtSlot(str)
     def insertPlainText(self, msg) -> None:
@@ -269,12 +265,17 @@ class MainWidget(QWidget):
     #
     #  Slot for sending the "on finished" signal from the background thread
     #
-    #  Called when the backgroudn job is finished and includes a status value
-    @pyqtSlot(int, str, int)
-    def on_finished(self, status, action_type, job_id) -> None:
+    #  Called when the background job is finished and includes a status value
+    @pyqtSlot(int, str, int, dict)
+    def on_finished(self, status, action_type, job_id, info) -> None:
 
         # If the part detection is finished, trigger the erase / program
         if action_type == AUxSAMBADetect.ACTION_ID:
+            self.writeMessage(str(info))
+            if 'Detected Part' in info:
+                self.processor = info['Detected Part']
+            else:
+                self.processor = ''
             if status > 0:
                 self.writeMessage("Part detection failed!")
                 if self.samd21:

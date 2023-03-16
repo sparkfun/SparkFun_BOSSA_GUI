@@ -324,14 +324,14 @@ def startLoader(args):
 			# find the part by special registers values
 			part = session.set_part_by_chip_ids(chip_ids)
 			if args.cmd == 'info' or args.v > 0:
-				print('Discovered Part: %s' % part.get_name())
+				print('Detected Part: %s' % part.get_name())
 			if not part.is_tested():
 				logging.warning('Selected part is currently untested')
 
 			if args.cmd == 'info':
 				print(part.get_info())
 				sysExit = 0
-				message = 'info: ' + part.get_name()
+				message = 'info: Detected Part: ' + part.get_name()
 
 			elif args.cmd == 'read':
 				if not args.a and not args.l:

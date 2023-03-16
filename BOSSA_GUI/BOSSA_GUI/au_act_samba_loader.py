@@ -12,10 +12,15 @@ class AUxSAMBADetect(AxAction):
     def __init__(self) -> None:
         super().__init__(self.ACTION_ID, self.NAME)
 
-    def run_job(self, job:AxJob):
+    def run_job(self, job:AxJob, info):
 
         try:
             sysExit, message = loader(job.command)
+
+            info.append({'Detected Part' : 'Fred'})
+
+            #if 'Detected Part: ' in message:
+            #    info.append({'Detected Part': message[(message.find('Detected Part: ') + len('Detected Part: ')):]})
 
         except Exception:
             return 1
@@ -33,11 +38,10 @@ class AUxSAMBAErase(AxAction):
     def __init__(self) -> None:
         super().__init__(self.ACTION_ID, self.NAME)
 
-    def run_job(self, job:AxJob):
+    def run_job(self, job:AxJob, info):
 
         try:
             sysExit, message = loader(job.command)
-
         except Exception:
             return 1
 
@@ -54,7 +58,7 @@ class AUxSAMBAProgram(AxAction):
     def __init__(self) -> None:
         super().__init__(self.ACTION_ID, self.NAME)
 
-    def run_job(self, job:AxJob):
+    def run_job(self, job:AxJob, info):
 
         try:
             sysExit, message = loader(job.command)
@@ -75,7 +79,7 @@ class AUxSAMBAVerify(AxAction):
     def __init__(self) -> None:
         super().__init__(self.ACTION_ID, self.NAME)
 
-    def run_job(self, job:AxJob):
+    def run_job(self, job:AxJob, info):
 
         try:
             sysExit, message = loader(job.command)
@@ -96,7 +100,7 @@ class AUxSAMBAReset(AxAction):
     def __init__(self) -> None:
         super().__init__(self.ACTION_ID, self.NAME)
 
-    def run_job(self, job:AxJob):
+    def run_job(self, job:AxJob, info):
 
         try:
             sysExit, message = loader(job.command)

@@ -33,13 +33,6 @@ Our BOSSA (Basic Open Source SAM-BA Application) GUI is a convenient way to upgr
 
 You will find the zipped BOSSA_GUI executables attached to each [release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases).
 
-### Windows Installation
-
-* Download the GitHub [release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases) zip file - *BOSSA__GUI.win.zip*
-* Unzip the release file - *BOSSA__GUI.win.zip*
-* This results in the application executable, *BOSSA__GUI.exe*
-* Double-click *BOSSA__GUI.exe* to start the application
-
 ## Command Line
 
 You can run the Python SAM-BA Loader direct from the command line. Download the [full repo zip file](https://github.com/sparkfun/SparkFun_BOSSA_GUI/archive/refs/heads/main.zip).
@@ -53,6 +46,65 @@ Extract it. Python SAM-BA Loader is in the ```BOSSA_GUI\SAMBALoad``` sub-folder.
 * ```python SAMBALoader.py -p COM1 read -a 0x2000 -l 0x1000 -f myCode.bin``` will read 0x1000 bytes from flash memory, starting at address 0x2000 and write them into ```myCode.bin```
 * Add the ```--reset``` switch to reset the board when the operation is complete. E.g. ```python SAMBALoader.py -p COM1 --reset verify -a 0x2000 -f myCode.bin```
 * Add the ```-v``` switch to display helpful verbose messages. Add ```-vv``` for even more verbose messages.
+
+## Installation
+
+### Windows Installation
+
+* Download the GitHub [release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases) zip file - *BOSSA__GUI.win.zip*
+* Unzip the release file - *BOSSA__GUI.win.zip*
+* This results in the application executable, *BOSSA__GUI.exe*
+* Double-click *BOSSA__GUI.exe* to start the application
+
+### macOS
+* Download the [github release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases) file - *RTKUploader.dmg*
+* Double click the *RTKUploader.dmg* file to mount the disk image. 
+* A Finder window, with the contents of the file will open
+* Install the *RTKUploader.app* by dragging it on the *Applications* in the RTKUploader Finder Window, or copying the file to a desired location.
+* Once complete, unmount the RTKUploader disk image by right-clicking on the mounted disk in Finder and ejecting it.
+
+To launch the application:
+* Double-click RTKUploader.app to launch the application
+* The RTKUploader.app isn't signed, so macOS won't run the application, and will display a warning dialog. Dismiss this dialog.
+* To approve app execution bring up the macOS *System Preferences* and navigate to: *Security & Privacy > General*. 
+* On this page, select the *Open Anyway* button to launch the RTKUploader application.
+* Once selected, macOS will present one last dialog. Select *Open* to run the application. The RTKUploader will now start.
+
+### Linux
+* Download the [github release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases) file - *RTKUploader.linux.gz*
+* Un-gzip the file, either by double-clicking in on the desktop, or using the `gunzip` command in a terminal window. This results in the file *RTKUploader* 
+* To run the application, the file must have *execute* permission. This is performed by selecting *Properties* from the file right-click menu, and then selecting permissions. You can also change permissions using the `chmod` command in a terminal window.
+* Once the application has execute permission, you can start the application a terminal window. Change directory's to the application location and issue `./RTKUploader`
+
+### Python Package
+The RTK Firmware Uploader is also provided as an installable Python package. This is advantageous for platforms that lack a pre-compiled application. 
+
+To install the Python package:
+* Download the package file - *python-install-package.zip*
+* Unzip the github release file. This results in the installable Python package file - *RTK_Firmware_Uploader-1.4.0.tar.gz* (note - the version number might vary)
+
+At a command line - issue the package install command:
+
+* `pip install RTK_Firmware_Uploader-1.4.0.tar.gz`
+* Once installed, you can start the RTK Uploader App by issuing the command `./RTK_Formware_Upload` at the command line. (To see the command, you might need to start a new terminal, or issue a command like `rehash` depending on your platform/shell)
+
+Notes:
+* A path might be needed to specify the install file location.
+* Depending on your platform, this command might need to be run as admin/root.
+* Depending on your system, you might need to use the command `pip3`
+
+### Raspberry Pi
+We've tested the Uploader on both 32-bit and 64-bit Raspberry Pi Debian. You will need to use the **Python Package** to install it.
+
+Notes:
+* On 32-bit Raspberry Pi, with both Python 2 and Python 3 installed, use `sudo pip3 install RTK_Firmware_Uploader-1.4.0.tar.gz`
+  * By default, the executable will be placed in `/usr/local/bin`
+* On 64-bit Raspberry Pi, use `sudo pip install RTK_Firmware_Uploader-1.4.0.tar.gz`
+* The `sudo` is required to let `setup.py` install `python3-pyqt5` and `python3-pyqt5.qtserialport` using `sudo apt-get install`
+
+![Raspberry Pi 64-bit : Install](images/RPi_install.png)
+
+![Raspberry Pi 64-bit : Install](images/RPi_Uploader.png)
 
 ## Thanks
 

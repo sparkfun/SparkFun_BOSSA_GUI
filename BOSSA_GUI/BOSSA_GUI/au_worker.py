@@ -165,7 +165,7 @@ class AUxWorker(object):
     # 
     # retval  0 = OKAY
 
-    def dispatch_job(self, job):
+    def dispatch_job(self, job, info):
 
         # make sure we have a job
         if not isinstance(job, AxJob):
@@ -195,7 +195,7 @@ class AUxWorker(object):
                 # catch any exit() calls the underlying system might make
                 try:
                     # run the action
-                    return self._actions[job.action_id].run_job(job)
+                    return self._actions[job.action_id].run_job(job, info)
                 except SystemExit as error:
                     # some scripts call exit(), even if not an error
                     self.message("Complete.")
@@ -219,7 +219,8 @@ class AUxWorker(object):
             else:
                 job = inputQueue.get()
 
-                status = self.dispatch_job(job)
+                info = {} # An empty dictionary to hold the job results
+                status = self.dispatch_job(job, info)
 
                 # job is finished - let UX know -pass status, action type and job id
-                self._cb_function(self.TYPE_FINISHED, status, job.action_id, job.job_id)
+                self._cb_function(self.TYPE_FINISHED, status, job.action_id, job.job_id, info)
