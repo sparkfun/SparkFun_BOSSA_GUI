@@ -51,11 +51,11 @@ setuptools.setup(
     # http://packaging.python.org/en/latest/tutorial.html#version
     version=_APP_VERSION,
 
-    description='Application to upload firmware to SparkFun RTK products',
+    description='Application to upload firmware to SparkFun products using SAM-BA',
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://docs.sparkfun.com/SparkFun_RTK_Firmware/intro/',
+    url='https://github.com/sparkfun/SparkFun_BOSSA_GUI',
 
     # Author details
     author='SparkFun Electronics',
@@ -95,7 +95,7 @@ setuptools.setup(
     download_url="https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases",
 
     # What does your project relate to?
-    keywords='Firmware SparkFun RTK Uploader',
+    keywords='Firmware SparkFun BOSSA SAM-BA Loader',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().

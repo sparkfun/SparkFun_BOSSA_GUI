@@ -38,23 +38,24 @@ jobs:
       # Build the installer
       - name: Build Windows Installer
         run: |
-          pyinstaller --onefile --clean --name RTKUploader --noconsole --distpath=. --icon=RTK_Firmware_Uploader\resource\RTK.ico --add-binary="RTK_Firmware_Uploader\resource\RTK_Surveyor_Partitions_4MB.bin;." --add-binary="RTK_Firmware_Uploader\resource\RTK_Surveyor_Partitions_16MB.bin;." --add-binary="RTK_Firmware_Uploader\resource\RTK_Surveyor.ino.bootloader.bin;." --add-binary="RTK_Firmware_Uploader\resource\boot_app0.bin;." --add-binary="RTK_Firmware_Uploader\resource\RTK.png;." --add-data="RTK_Firmware_Uploader\resource\*;resource\" RTK_Firmware_Upload.py
+          cd BOSSA_GUI
+          pyinstaller --onefile --clean --name BOSSA_GUI --noconsole --distpath=. --icon=BOSSA_GUI\resource\sfe_logo_sm.ico --add-binary="BOSSA_GUI\resource\sfe_logo_sm.png;." --add-data="BOSSA_GUI\resource\*;resource\" BOSSA__GUI.py
                     
       - name: Compress Installer
         shell: powershell
         run: |
           $compress = @{
-            Path = ".\RTKUploader.exe"
+            Path = ".\BOSSA_GUI.exe"
             CompressionLevel = "Fastest"
-            DestinationPath = ".\RTKUploader.win.zip"
+            DestinationPath = ".\BOSSA_GUI.win.zip"
             }
           Compress-Archive @compress
         
       - uses: actions/upload-artifact@v3
         with:
-          name: RTKUploader.win.zip
-          path: RTKUploader.win.zip
+          name: BOSSA_GUI.win.zip
+          path: BOSSA_GUI.win.zip
           
       # Use Windows powershell notation: $env:GITHUB_OUTPUT
       - id: output-installer
-        run: echo "filename=RTKUploader.win.zip" >> $env:GITHUB_OUTPUT
+        run: echo "filename=BOSSA_GUI.win.zip" >> $env:GITHUB_OUTPUT

@@ -42,6 +42,7 @@ jobs:
       # Build the installer
       - name: Build Python Installer
         run: |
+          cd BOSSA_GUI
           python setup.py sdist
           
       - uses: actions/upload-artifact@v3

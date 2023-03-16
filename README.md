@@ -35,10 +35,10 @@ You will find the zipped BOSSA_GUI executables attached to each [release](https:
 
 ### Windows Installation
 
-* Download the GitHub [release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases) zip file - *BOSSA__GUI.win.zip*
-* Unzip the release file - *BOSSA__GUI.win.zip*
-* This results in the application executable, *BOSSA__GUI.exe*
-* Double-click *BOSSA__GUI.exe* to start the application
+* Download the GitHub [release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases) zip file - *BOSSA_GUI.win.zip*
+* Unzip the release file - *BOSSA_GUI.win.zip*
+* This results in the application executable, *BOSSA_GUI.exe*
+* Double-click *BOSSA_GUI.exe* to start the application
 
 ## Command Line
 

@@ -38,14 +38,15 @@ jobs:
       # Build the installer
       - name: Build Linux Installer
         run: |
-          pyinstaller --onefile --clean --name RTKUploader --noconsole --distpath=. --icon=RTK_Firmware_Uploader/resource/RTK.ico --add-binary="RTK_Firmware_Uploader/resource/RTK_Surveyor_Partitions_4MB.bin:." --add-binary="RTK_Firmware_Uploader/resource/RTK_Surveyor_Partitions_16MB.bin:." --add-binary="RTK_Firmware_Uploader/resource/RTK_Surveyor.ino.bootloader.bin:." --add-binary="RTK_Firmware_Uploader/resource/boot_app0.bin:." --add-binary="RTK_Firmware_Uploader/resource/RTK.png:." --add-data="RTK_Firmware_Uploader/resource/*:resource/" RTK_Firmware_Upload.py
-          gzip RTKUploader
-          mv RTKUploader.gz RTKUploader.linux.gz
+          cd BOSSA_GUI
+          pyinstaller --onefile --clean --name BOSSA_GUI --noconsole --distpath=. --icon=BOSSA_GUI/resource/sfe_logo_sm.ico --add-binary="BOSSA_GUI/resource/sfe_logo_sm.png:." --add-data="BOSSA_GUI/resource/*:resource/" BOSSA__GUI.py
+          gzip BOSSA_GUI
+          mv BOSSA_GUI.gz BOSSA__GUI.linux.gz
           
       - uses: actions/upload-artifact@v3
         with:
-          name: RTKUploader.linux.gz
-          path: RTKUploader.linux.gz
+          name: BOSSA_GUI.linux.gz
+          path: BOSSA_GUI.linux.gz
 
       - id: output-installer
-        run: echo "filename=RTKUploader.linux.gz" >> $GITHUB_OUTPUT
+        run: echo "filename=BOSSA_GUI.linux.gz" >> $GITHUB_OUTPUT
