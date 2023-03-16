@@ -145,11 +145,11 @@ class MainWidget(QWidget):
 
         # Erase Check Box
         self.erase_checkbox = QCheckBox(self.tr('Erase'))
-        self.erase_checkbox.setChecked(False)
+        self.erase_checkbox.setChecked(True)
 
         # Verify Check Box
         self.verify_checkbox = QCheckBox(self.tr('Verify'))
-        self.verify_checkbox.setChecked(False)
+        self.verify_checkbox.setChecked(True)
 
         # SAMD21 Check Box
         self.samd21_checkbox = QCheckBox(self.tr('SAMD21'))
@@ -167,8 +167,8 @@ class MainWidget(QWidget):
 
         # Messages Window
         self.messageBox = QPlainTextEdit()
-        #messageFont=QFont("Courier")
-        #self.messageBox.setFont(messageFont)
+        messageFont=QFont("Courier")
+        self.messageBox.setFont(messageFont)
         color = "C0C0C0" if ux_is_darkmode() else "424242"
         self.messageBox.setStyleSheet("QPlainTextEdit { color: #" + color + ";}")
         self.messageBox.setReadOnly(True)
@@ -277,6 +277,13 @@ class MainWidget(QWidget):
         if action_type == AUxSAMBADetect.ACTION_ID:
             if status > 0:
                 self.writeMessage("Part detection failed!")
+                if self.samd21:
+                    self.writeMessage("Try double-clicking the reset button")
+                    self.writeMessage("to put the board into bootloader mode")
+                    self.writeMessage("and uncheck the SAMD21 box.")
+                else:
+                    self.writeMessage("Is the board in bootloader mode?")
+                    self.writeMessage("Try double-clicking the reset button.")
                 self.disable_interface(False)
             elif self.erase:
                 self.writeMessage("Part detected: " + self.processor)
@@ -458,8 +465,12 @@ class MainWidget(QWidget):
     # Enable/Disable portions of the ux - often used when a job is running
     #
     def disable_interface(self, bDisable=False):
-        """Disable the upload button until all jobs are complete"""
+        """Disable the buttons until all jobs are complete"""
         self.upload_btn.setDisabled(bDisable)
+        self.erase_checkbox.setDisabled(bDisable)
+        self.verify_checkbox.setDisabled(bDisable)
+        self.samd21_checkbox.setDisabled(bDisable)
+        self.firmware_browse_btn.setDisabled(bDisable)
 
     def on_upload_btn_pressed(self) -> None:
         """Update the firmware"""
@@ -491,6 +502,8 @@ class MainWidget(QWidget):
                 return
             f.close()
 
+        self.disable_interface(True)
+
         self.portActual = self.port
 
         if self.samd21:
@@ -498,6 +511,8 @@ class MainWidget(QWidget):
             # Open the port at 1200 baud to enter the bootloader
             # See touchForCDCReset in:
             # https://github.com/arduino/Arduino/blob/master/arduino-core/src/processing/app/Serial.java
+            # BOSSA:
+            # https://github.com/shumatech/BOSSA/blob/3532de82efd28fadbabc2b258d84dddf14298107/src/bossac.cpp#L374-L386
             self.writeMessage("\nEnter SAMD21 bootloader\n")
 
             portsBefore = []
@@ -506,23 +521,14 @@ class MainWidget(QWidget):
 
             try:
                 port = serial.Serial(self.port, baudrate=1200, bytesize=EIGHTBITS, parity=PARITY_NONE, stopbits=STOPBITS_ONE, timeout=0)
+                port.setRTS(True)
+                port.setDTR(False)
+                port.close()
             except (ValueError, IOError) as err:
                 self.writeMessage(str(err))
+                self.disable_interface(False)
                 return
             
-            port.write(0xFF)
-
-            time.sleep(0.1)
-            port.setDTR(False) # Reset the SAMD
-            time.sleep(0.1)
-            port.setDTR(True)
-            time.sleep(0.1)
-            port.setDTR(False)
-            time.sleep(0.1)
-            port.close()
-
-            time.sleep(0.4)
-
             startTime = time.time()
             keepGoing = True
             portGone = False
@@ -581,11 +587,11 @@ class MainWidget(QWidget):
 
         else:
 
-            self.writeMessage("\nAssuming SAMD51 is already in bootloader mode (fading LED)\n")
+            self.writeMessage("\nAssuming board is already in bootloader mode (fading LED)\n")
 
         self.writeMessage("\nDetecting processor\n")
 
-        time.sleep(2.0)
+        time.sleep(1.0)
 
         command = []
         command.extend(["-p",self.portActual])
@@ -618,9 +624,11 @@ class MainWidget(QWidget):
         except:
             pass
 
+        self.disable_interface(True) # Redundant... Interface is still disabled from detect
+
         self.writeMessage("Erasing processor\n")
 
-        time.sleep(2.0)
+        time.sleep(1.0)
 
         command = []
         command.extend(["-p",self.portActual])
@@ -634,8 +642,6 @@ class MainWidget(QWidget):
 
         # Send the job to the worker to process
         self._worker.add_job(theJob)
-
-        self.disable_interface(True)
 
     def do_program(self) -> None:
         """Program the firmware"""
@@ -666,9 +672,11 @@ class MainWidget(QWidget):
         except:
             pass
 
+        self.disable_interface(True) # Redundant... Interface is still disabled from erase
+
         self.writeMessage("Uploading firmware\n")
 
-        time.sleep(2.0)
+        time.sleep(1.0)
 
         command = []
         command.extend(["-p",self.portActual])
@@ -687,8 +695,6 @@ class MainWidget(QWidget):
 
         # Send the job to the worker to process
         self._worker.add_job(theJob)
-
-        self.disable_interface(True) # Redundant... Interface is still disabled from flash detect
 
     def do_verify(self) -> None:
         """Verify the firmware"""
@@ -721,7 +727,7 @@ class MainWidget(QWidget):
 
         self.writeMessage("Verifying firmware\n")
 
-        time.sleep(2.0)
+        time.sleep(1.0)
 
         command = []
         command.extend(["-p",self.portActual])
@@ -761,7 +767,7 @@ class MainWidget(QWidget):
 
         self.writeMessage("Resetting processor\n")
 
-        time.sleep(2.0)
+        time.sleep(1.0)
 
         command = []
         command.extend(["-p",self.portActual])
