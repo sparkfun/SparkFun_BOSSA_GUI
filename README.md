@@ -111,9 +111,9 @@ The BOSSA__GUI app is also provided as an installable Python package. This is ad
 
 To install the Python package:
 
-* Download the [package file](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases) - *BOSSA__GUI-2.0.0.tar.gz* (note - the version number might vary)
+* Download the [package file](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases) - *BOSSA_GUI-2.0.0.tar.gz* (note - the version number might vary)
 * At a command line - issue the package install command:
-  * `pip install BOSSA__GUI-2.0.0.tar.gz`
+  * `pip install BOSSA_GUI-2.0.0.tar.gz`
 * Once installed, you can start the BOSSA__GUI app by issuing the command ```./BOSSA__GUI``` at the command line. (To see the command, you might need to start a new terminal, or issue a command like `rehash` depending on your platform/shell)
 
 Notes:
@@ -129,8 +129,8 @@ The GUI is uninstalled by issuing this pip command:
 We've tested the GUI on 64-bit Raspberry Pi Debian. You will need to use the **Python Package** to install it.
 
 Notes:
-* On 32-bit Raspberry Pi, with both Python 2 and Python 3 installed, use `sudo pip3 install BOSSA__GUI-2.0.0.tar.gz`
-* On 64-bit Raspberry Pi, use `sudo pip install BOSSA__GUI-2.0.0.tar.gz`
+* On 32-bit Raspberry Pi, with both Python 2 and Python 3 installed, use `sudo pip3 install BOSSA_GUI-2.0.0.tar.gz`
+* On 64-bit Raspberry Pi, use `sudo pip install BOSSA_GUI-2.0.0.tar.gz`
 * By default, the executable will be placed in `/usr/local/bin`
 * The `sudo` is required to let `setup.py` install `python3-pyqt5` and `python3-pyqt5.qtserialport` using `sudo apt-get install`
 
