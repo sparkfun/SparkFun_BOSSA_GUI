@@ -20,16 +20,38 @@
 Our BOSSA (Basic Open Source SAM-BA Application) GUI is a convenient way to upgrade the firmware on many SAMD21 and SAMD51 boards. We wrote it to make it easy to upgrade the firmware on our
 [LoRaSerial boards](https://www.sparkfun.com/products/19311), but you can use it to upload binary firmware to any board running the SAM-BA bootloader.
 
-* The BOSSA GUI is a PyQt5 'wrapper' for the excellent Python SAM-BA Loader.
-* Our GUI makes it easy to select the firmware file and COM port.
-* For SAMD21, it also performs the open-port-at-1200-baud-and-toggle-DTR action to place the board into bootloader mode.
-  * Note: we've had mixed success with this feature. Sometimes it works, sometimes it doesn't. It seems to be machine-dependent...
-  * If it doesn't work for you, uncheck the SAMD21 check-box and double-click the board reset button to manually put the board into bootloader mode.
-* For SAMD51, you need to manually double-click the reset button to put the board into bootloader mode (indicated by the fading LED) and then select the updated COM port.
-* The actual upgrade is done by the Python SAM-BA Loader.
-  * You can run the Loader from the command line too. See below
+* The BOSSA GUI is a PyQt5 'wrapper' for the excellent [Python SAM-BA Loader](#thanks)
+* Our GUI makes it easy to select the firmware file and COM port
+* The actual upgrade is done by the Python SAM-BA Loader
+  * You can run the Loader from the command line too. See [_Command Line_ below](#command-line)
 
-## BOSSA_GUI Executable
+If you need to install the application, see the [Installation](#installation) section of this page.
+
+## Using the BOSSA GUI
+
+* Click ```Browse``` and select the firmware file you'd like to upload (should end in _.bin_)
+* Attach the SAMD target board over USB
+* For SAMD51 boards:
+  * Double-click the board's reset button to put the SAMD51 into bootloader mode (indicated by the fading LED)
+* For SAMD21 boards:
+  * Check the SAMD21 check-box
+  * The GUI will attempt to put the SAMD21 into bootloader mode automatically
+* Select the COM port from the dropdown menu
+  * On macOS, two ports will appear. Select the one called ```tty.usbmodem```
+
+![BOSSA GUI macOS](./img/macOS.png)
+
+* Click ```Upload Binary```
+  * The GUI will detect the board, erase, program and verify the firmware and then reset the board
+
+For SAMD21 boards, the GUI will attempt to put the SAMD into bootloader mode automatically. This feature is machine-dependent and occasionally fails to work correctly. If it is not working for you:
+
+* Uncheck the SAMD21 check-box
+* Double-click the board's reset button to put the SAMD21 into bootloader mode (indicated by the fading LED)
+* Select the COM port from the dropdown menu
+* Click ```Upload Binary```
+
+## BOSSA_GUI Executables
 
 You will find the zipped BOSSA_GUI executables attached to each [release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases).
 
@@ -39,6 +61,83 @@ You will find the zipped BOSSA_GUI executables attached to each [release](https:
 * Unzip the release file - *BOSSA__GUI.win.zip*
 * This results in the application executable, *BOSSA__GUI.exe*
 * Double-click *BOSSA__GUI.exe* to start the application
+
+### macOS Installation
+
+* Download the GitHub [release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases) file - *BOSSA__GUI.dmg*
+
+![BOSSA GUI macOS](./img/macOS_1.png)
+
+* Double-click the *BOSSA__GUI.dmg* file to mount the disk image. A Finder window will open:
+
+![BOSSA GUI macOS](./img/macOS_2.png)
+
+* Install the BOSSA__GUI app by dragging it onto the _Applications_ in the Finder Window, or copying the file to a desired location
+* Once complete, unmount the BOSSA__GUI disk image by right-clicking on the mounted disk in Finder and ejecting it
+
+![BOSSA GUI macOS](./img/macOS_3.png)
+
+To launch the BOSSA__GUI application:
+
+* Double-click BOSSA__GUI app icon to launch the application
+* The BOSSA__GUI app is not signed, so macOS will not run the application and will display a warning dialog. Click ```OK``` to dismiss the window
+
+![BOSSA GUI macOS](./img/macOS_4.png)
+
+* Open the macOS _Settings_ and navigate to _Privacy and Security_
+* Scroll down and click ```Open Anyway``` to launch the BOSSA__GUI app
+
+![BOSSA GUI macOS](./img/macOS_5.png)
+
+* A second warning dialog will appear. Click ```Open``` to open the app
+
+![BOSSA GUI macOS](./img/macOS_5.png)
+
+* Two COM ports will appear when a board is connected. Select the one called ```tty.usbmodem```
+
+![BOSSA GUI macOS](./img/macOS.png)
+
+### Linux
+
+* Download the GitHub [release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases) file - *BOSSA__GUI.linux.gz*
+* Unzip the release file - *BOSSA__GUI.linux.gz*
+* Un-gzip the file, either by double-clicking in on the desktop, or using the `gunzip` command in a terminal window. This results in the file *BOSSA__GUI* 
+* To run the application, the file must have *execute* permission. This is performed by selecting *Properties* from the file right-click menu, and then selecting permissions. You can also change permissions using the ```chmod``` command in a terminal window.
+* Once the application has execute permission, you can start the application a terminal window. Change directory to the application location and issue ```./BOSSA__GUI```
+
+### Python Package
+
+The BOSSA__GUI app is also provided as an installable Python package. This is advantageous for platforms that lack a pre-compiled application. 
+
+To install the Python package:
+
+* Download the [package file](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases) - *BOSSA__GUI-2.0.0.tar.gz* (note - the version number might vary)
+* At a command line - issue the package install command:
+  * `pip install BOSSA__GUI-2.0.0.tar.gz`
+* Once installed, you can start the BOSSA__GUI app by issuing the command ```./BOSSA__GUI``` at the command line. (To see the command, you might need to start a new terminal, or issue a command like `rehash` depending on your platform/shell)
+
+Notes:
+* A path might be needed to specify the install file location.
+* Depending on your platform, this command might need to be run as admin/root.
+* Depending on your system, you might need to use the command `pip3`
+
+The GUI is uninstalled by issuing this pip command: 
+* `pip uninstall BOSSA__GUI`
+
+### Raspberry Pi
+
+We've tested the GUI on 64-bit Raspberry Pi Debian. You will need to use the **Python Package** to install it.
+
+Notes:
+* On 32-bit Raspberry Pi, with both Python 2 and Python 3 installed, use `sudo pip3 install BOSSA__GUI-2.0.0.tar.gz`
+* On 64-bit Raspberry Pi, use `sudo pip install BOSSA__GUI-2.0.0.tar.gz`
+* By default, the executable will be placed in `/usr/local/bin`
+* The `sudo` is required to let `setup.py` install `python3-pyqt5` and `python3-pyqt5.qtserialport` using `sudo apt-get install`
+
+## Example Firmware
+
+The [Test_Sketches](./Test_Sketches) folder contains some example firmware binaries for the SAMD21 RedBoard Turbo and the SAMD51 Thing Plus.
+These blink the on-board LED at different speeds and are a useful way of confirming that the code is being uploaded successfully.
 
 ## Command Line
 
@@ -63,6 +162,7 @@ Big thanks go to Scott Shumate (@shumatech) and the contributors to [BOSSA](http
 ## Repository Contents
 
 * **[/BOSSA_GUI](./BOSSA_GUI)** - Python3 PyQt5 source (.py)
+* **[/SAMBALoad](./BOSSA_GUI/BOSSA_GUI/SAMBALoad)** - Python source for the SAM-BA Loader
 * **[/.github/workflows/build-windows.yml](./.github/workflows/build-windows.yml)** - YAML for the GitHub Build Action - for Windows
 * **[/.github/workflows/non-release-build.yml](./.github/workflows/non-release-build.yml)** - YAML for the GitHub Non-Release-Build Action
   * Builds the zipped executable but does not release it
