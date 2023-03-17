@@ -151,9 +151,9 @@ Extract it. Python SAM-BA Loader is in the ```BOSSA_GUI\SAMBALoad``` sub-folder.
 * ```python SAMBALoader.py``` will display the help. So will ```python SAMBALoader.py -h``` or ```python SAMBALoader.py --help```
 * ```python SAMBALoader.py -p COM1 info``` will display part information from the board on COM1 (Windows). Replace with ```/dev/ttyACM0``` if you are on Linux.
 * ```python SAMBALoader.py -p COM1 erase -a 0x2000``` will erase the flash memory starting at address 0x2000 (SAMD21). Use 0x4000 for SAMD51.
-* ```python SAMBALoader.py -p COM1 write -a 0x2000 -f myCode.bin``` will write ```myCode.bin``` to flash memory, starting at address 0x2000 (SAMD21).
-* ```python SAMBALoader.py -p COM1 verify -a 0x2000 -f myCode.bin``` will verify the flash memory against ```myCode.bin```
-* ```python SAMBALoader.py -p COM1 read -a 0x2000 -l 0x1000 -f myCode.bin``` will read 0x1000 bytes from flash memory, starting at address 0x2000 and write them into ```myCode.bin```
+* ```python SAMBALoader.py -p COM1 write -a 0x2000 -f myCode.bin``` will write ```myCode.bin``` to flash memory, starting at address 0x2000 (SAMD21). Use 0x4000 for SAMD51.
+* ```python SAMBALoader.py -p COM1 verify -a 0x2000 -f myCode.bin``` will verify the flash memory against ```myCode.bin```, starting at address 0x2000 (SAMD21). Use 0x4000 for SAMD51.
+* ```python SAMBALoader.py -p COM1 read -a 0x2000 -l 0x1000 -f myCode.bin``` will read 0x1000 bytes from flash memory, starting at address 0x2000 and write them into ```myCode.bin```. Use 0x4000 for SAMD51.
 * Add the ```--reset``` switch to reset the board when the operation is complete. E.g. ```python SAMBALoader.py -p COM1 --reset verify -a 0x2000 -f myCode.bin```
 * Add the ```-v``` switch to display helpful verbose messages. Add ```-vv``` for even more verbose messages.
 
@@ -167,13 +167,14 @@ Big thanks go to Scott Shumate (@shumatech) and the contributors to [BOSSA](http
 
 * **[/BOSSA_GUI](./BOSSA_GUI)** - Python3 PyQt5 source (.py)
 * **[/SAMBALoad](./BOSSA_GUI/BOSSA_GUI/SAMBALoad)** - Python source for the SAM-BA Loader
-* **[/.github/workflows/build-windows.yml](./.github/workflows/build-windows.yml)** - YAML for the GitHub Build Action - for Windows
-* **[/.github/workflows/non-release-build.yml](./.github/workflows/non-release-build.yml)** - YAML for the GitHub Non-Release-Build Action
-  * Builds the zipped executable but does not release it
-  * Click on the repo **Actions** tab and then click on the latest **non-release-build** workflow run. The zipped executable is attached as an Artifact
-* **[/.github/workflows/build-and-release.yml](./.github/workflows/build-and-release.yml)** - YAML for the GitHub Build-And-Release Action
+* **[/.github/workflows](./.github/workflows)** - YAML for the GitHub Build Actions
+  * **[/.github/workflows/build-and-release.yml](./.github/workflows/build-and-release.yml)** - YAML for the GitHub Build-And-Release Action
   * Builds the zipped executables, creates a release and attaches the zip files as Assets
   * Click on the [Releases](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases) and then click on the latest release. The zipped executables are attached as Assets
+  * **[/.github/workflows/non-release-build.yml](./.github/workflows/non-release-build.yml)** - YAML for the GitHub Non-Release-Build Action
+  * Builds the zipped executable but does not release it
+  * Click on the repo **Actions** tab and then click on the latest **non-release-build** workflow run. The zipped executable is attached as an Artifact
+  * **[/.github/workflows/build-windows.yml](./.github/workflows/build-windows.yml)** - YAML for the GitHub Build Action - for Windows
 
 ## License Information
 
