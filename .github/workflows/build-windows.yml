@@ -10,6 +10,9 @@ on:
       build-file:
         description: "The output of this build procsss"
         value: ${{ jobs.windows-build-job.outputs.install-file }}
+      build-exe:
+        description: "The output of this build procsss"
+        value: ${{ jobs.windows-build-job.outputs.install-exe }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -21,6 +24,7 @@ jobs:
     # Output
     outputs:
       install-file: ${{ steps.output-installer.outputs.filename }}
+      install-exe: ${{ steps.output-installer.outputs.exename }}
       
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -56,6 +60,12 @@ jobs:
           name: BOSSA__GUI.win.zip
           path: BOSSA_GUI/BOSSA__GUI.win.zip
           
+      - uses: actions/upload-artifact@v3
+        with:
+          name: BOSSA__GUI.exe
+          path: BOSSA_GUI/BOSSA__GUI.exe
+          
       # Use Windows powershell notation: $env:GITHUB_OUTPUT
       - id: output-installer
         run: echo "filename=BOSSA__GUI.win.zip" >> $env:GITHUB_OUTPUT
+        run: echo "exename=BOSSA__GUI.exe" >> $env:GITHUB_OUTPUT
