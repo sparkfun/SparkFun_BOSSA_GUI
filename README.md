@@ -63,6 +63,15 @@ You will find the zipped BOSSA_GUI executables attached to each [release](https:
 * Unzip the release file - *BOSSA__GUI.win.zip*
 * This results in the application executable, *BOSSA__GUI.exe*
 * Double-click *BOSSA__GUI.exe* to start the application
+* The BOSSA__GUI executable is not signed, so Windows will not run the application and will display a warning dialog
+
+![BOSSA GUI Windows](./img/Windows_1.png)
+
+* Click **More Info**
+
+![BOSSA GUI Windows](./img/Windows_1.png)
+
+* Click **Run anyway** to start the GUI
 
 ### macOS Installation
 
