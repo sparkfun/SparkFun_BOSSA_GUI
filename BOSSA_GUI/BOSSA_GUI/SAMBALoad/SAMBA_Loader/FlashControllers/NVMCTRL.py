@@ -52,8 +52,22 @@ class NVMCTRL(FlashController.FlashControllerBase):
 
 		nvm_param = samba.read_word(self.base_address + self.PARAM_OFFSET)
 
+		# Bits 18:16 – PSZ[2:0] Page Size
+		# Indicates the page size. Not all devices of the device families will provide all the page sizes indicated in the table.
+		# Value Name Description
+		# 0x0 8 8 bytes
+		# 0x1 16 16 bytes
+		# 0x2 32 32 bytes
+		# 0x3 64 64 bytes
+		# 0x4 128 128 bytes
+		# 0x5 256 256 bytes
+		# 0x6 512 512 bytes
+		# 0x7 1024 1024 bytes
 		self.page_size = 8 << ((nvm_param >> 16) & 0x07)
-		self.pages     = nvm_param & 0xFFFF
+		
+		# Bits 15:0 – NVMP[15:0] NVM Pages
+		# Indicates the number of pages in the NVM main address space.
+		self.pages     = nvm_param & 0xFFFF 
 
 
 	def _wait_while_busy(self, samba):
