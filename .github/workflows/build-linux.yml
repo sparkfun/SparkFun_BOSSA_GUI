@@ -49,4 +49,4 @@ jobs:
           path: BOSSA_GUI/BOSSA__GUI.linux.gz
 
       - id: output-installer
-        run: echo "filename=BOSSA_GUI/BOSSA__GUI.linux.gz" >> $GITHUB_OUTPUT
+        run: echo "filename=BOSSA__GUI.linux.gz" >> $GITHUB_OUTPUT

@@ -51,6 +51,6 @@ jobs:
           path: BOSSA_GUI/BOSSA__GUI.dmg
 
       - id: output-installer
-        run: echo "filename=BOSSA_GUI/BOSSA__GUI.dmg" >> $GITHUB_OUTPUT
+        run: echo "filename=BOSSA__GUI.dmg" >> $GITHUB_OUTPUT
         
         

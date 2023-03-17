@@ -58,4 +58,4 @@ jobs:
           
       # Use Windows powershell notation: $env:GITHUB_OUTPUT
       - id: output-installer
-        run: echo "filename=BOSSA_GUI/BOSSA__GUI.win.zip" >> $env:GITHUB_OUTPUT
+        run: echo "filename=BOSSA__GUI.win.zip" >> $env:GITHUB_OUTPUT

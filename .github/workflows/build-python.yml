@@ -57,5 +57,5 @@ jobs:
 
       - id: output-installer
         run: |
-          echo "filename=BOSSA_GUI/python-install-package" >> $GITHUB_OUTPUT
-          echo "packagename=BOSSA_GUI/${{ env.PACKAGE_NAME }}" >> $GITHUB_OUTPUT
+          echo "filename=python-install-package" >> $GITHUB_OUTPUT
+          echo "packagename=${{ env.PACKAGE_NAME }}" >> $GITHUB_OUTPUT
