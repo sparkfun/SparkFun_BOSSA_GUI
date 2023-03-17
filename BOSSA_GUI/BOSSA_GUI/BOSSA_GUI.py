@@ -153,7 +153,7 @@ class MainWidget(QWidget):
 
         # SAMD21 Check Box
         self.samd21_checkbox = QCheckBox(self.tr('SAMD21'))
-        self.samd21_checkbox.setChecked(False)
+        self.samd21_checkbox.setChecked(True)
 
         # Upload Button
         myFont=QFont()
