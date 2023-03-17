@@ -55,6 +55,8 @@ For SAMD21 boards, the GUI will attempt to put the SAMD into bootloader mode aut
 
 You will find the zipped BOSSA_GUI executables attached to each [release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases).
 
+[![BOSSA GUI Release Assets](./img/Assets.png)](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases)
+
 ### Windows Installation
 
 * Download the GitHub [release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases) zip file - *BOSSA__GUI.win.zip*
