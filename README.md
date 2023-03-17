@@ -51,7 +51,7 @@ For SAMD21 boards, the GUI will attempt to put the SAMD into bootloader mode aut
 * Select the COM port from the dropdown menu
 * Click ```Upload Binary```
 
-## BOSSA_GUI Executables
+## Installation
 
 You will find the zipped BOSSA_GUI executables attached to each [release](https://github.com/sparkfun/SparkFun_BOSSA_GUI/releases).
 
@@ -91,7 +91,7 @@ To launch the BOSSA__GUI application:
 
 * A second warning dialog will appear. Click ```Open``` to open the app
 
-![BOSSA GUI macOS](./img/macOS_5.png)
+![BOSSA GUI macOS](./img/macOS_6.png)
 
 * Two COM ports will appear when a board is connected. Select the one called ```tty.usbmodem```
 
@@ -133,6 +133,10 @@ Notes:
 * On 64-bit Raspberry Pi, use `sudo pip install BOSSA__GUI-2.0.0.tar.gz`
 * By default, the executable will be placed in `/usr/local/bin`
 * The `sudo` is required to let `setup.py` install `python3-pyqt5` and `python3-pyqt5.qtserialport` using `sudo apt-get install`
+
+When the SAMD goes into bootloader mode, it may cause a new drive dialog to appear. Click ```Cancel``` to dismiss it
+
+![BOSSA GUI Raspberry Pi](./img/Rasp_Pi.png)
 
 ## Example Firmware
 
