@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: build-windows
+name: build-linux
 
 # Controls when the workflow will run
 on:
@@ -9,19 +9,19 @@ on:
     outputs:
       build-file:
         description: "The output of this build procsss"
-        value: ${{ jobs.windows-build-job.outputs.install-file }}
+        value: ${{ jobs.linux-build-job.outputs.install-file }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # Build the installer on mac
-  windows-build-job:
+  linux-build-job:
     # The type of runner that the job will run on
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     
     # Output
     outputs:
       install-file: ${{ steps.output-installer.outputs.filename }}
-      
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -34,28 +34,19 @@ jobs:
       - name: System Setup
         run: |
           pip3 install pyinstaller pyqt5 darkdetect pyserial
-        
+
       # Build the installer
-      - name: Build Windows Installer
+      - name: Build Linux Installer
         run: |
           cd BOSSA_GUI
-          pyinstaller --onefile --clean --name BOSSA__GUI --noconsole --distpath=. --icon=BOSSA_GUI\resource\sfe_logo_sm.ico --add-binary="BOSSA_GUI\resource\sfe_logo_sm.png;." --add-data="BOSSA_GUI\resource\*;resource\" BOSSA__GUI.py
-                    
-      - name: Compress Installer
-        shell: powershell
-        run: |
-          $compress = @{
-            Path = ".\BOSSA_GUI\BOSSA__GUI.exe"
-            CompressionLevel = "Fastest"
-            DestinationPath = ".\BOSSA_GUI\BOSSA__GUI.win.zip"
-            }
-          Compress-Archive @compress
-        
+          pyinstaller --onefile --clean --name BOSSA__GUI --noconsole --distpath=. --icon=BOSSA_GUI/resource/sfe_logo_sm.ico --add-binary="BOSSA_GUI/resource/sfe_logo_sm.png:." --add-data="BOSSA_GUI/resource/*:resource/" BOSSA__GUI.py
+          gzip BOSSA__GUI
+          mv BOSSA__GUI.gz BOSSA__GUI.linux.gz
+          
       - uses: actions/upload-artifact@v3
         with:
-          name: BOSSA__GUI.win.zip
-          path: BOSSA_GUI/BOSSA__GUI.win.zip
-          
-      # Use Windows powershell notation: $env:GITHUB_OUTPUT
+          name: BOSSA__GUI.linux.gz
+          path: BOSSA_GUI/BOSSA__GUI.linux.gz
+
       - id: output-installer
-        run: echo "filename=BOSSA_GUI/BOSSA__GUI.win.zip" >> $env:GITHUB_OUTPUT
+        run: echo "filename=BOSSA_GUI/BOSSA__GUI.linux.gz" >> $GITHUB_OUTPUT

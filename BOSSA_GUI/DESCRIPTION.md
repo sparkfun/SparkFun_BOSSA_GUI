@@ -1,0 +1,1 @@
+The BOSSA GUI is a simple to use GUI for updating the firmware on SparkFun SAMD21/51 products - including LoRaSerial.

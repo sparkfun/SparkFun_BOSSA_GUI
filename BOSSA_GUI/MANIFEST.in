@@ -1,0 +1,2 @@
+include BOSSA_GUI/resource/*.*
+include DESCRIPTION.md

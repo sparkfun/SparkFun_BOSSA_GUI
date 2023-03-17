@@ -1,0 +1,56 @@
+# This is a basic workflow to help you get started with Actions
+
+name: build-macos
+
+# Controls when the workflow will run
+on:
+  # this is a called workflow
+  workflow_call:
+    outputs:
+      build-file:
+        description: "The output of this build procsss"
+        value: ${{ jobs.macos-build-job.outputs.install-file }}
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # Build the installer on mac
+  macos-build-job:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+    
+    # Output
+    outputs:
+      install-file: ${{ steps.output-installer.outputs.filename }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # Setup python
+      - name: System Setup
+        run: |
+          pip3 install pyserial pyinstaller Pillow pyqt5 darkdetect
+          brew install create-dmg
+
+      # Build the installer
+      - name: Build Mac Installer
+        run: |
+          cd BOSSA_GUI
+          pyinstaller --windowed -n BOSSA__GUI --noconsole --distpath=. --icon=BOSSA_GUI/resource/sfe_logo_sm.ico --add-binary="BOSSA_GUI/resource/sfe_logo_sm.png:." --add-data="BOSSA_GUI/resource/*:resource/" BOSSA__GUI.py
+          mkdir tmp
+          mv "BOSSA__GUI.app" "tmp/"
+          create-dmg --volicon "BOSSA_GUI/resource/sparkdisk.icns" --background "BOSSA_GUI/resource/sfe_logo_sm.png" --hide-extension "BOSSA__GUI.app" --icon "BOSSA__GUI.app" 100 100 --window-size 600 440 --app-drop-link 400 100 "BOSSA__GUI.dmg" "tmp/"
+          
+      - uses: actions/upload-artifact@v3
+        with:
+          name: BOSSA__GUI.dmg
+          path: BOSSA_GUI/BOSSA__GUI.dmg
+
+      - id: output-installer
+        run: echo "filename=BOSSA_GUI/BOSSA__GUI.dmg" >> $GITHUB_OUTPUT
+        
+        
