@@ -69,7 +69,7 @@ You will find the zipped BOSSA_GUI executables attached to each [release](https:
 
 * Click **More Info**
 
-![BOSSA GUI Windows](./img/Windows_1.png)
+![BOSSA GUI Windows](./img/Windows_2.png)
 
 * Click **Run anyway** to start the GUI
 
