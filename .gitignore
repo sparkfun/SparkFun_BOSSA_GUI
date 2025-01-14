@@ -2,6 +2,12 @@
 
 **.pyc
 
+# Environments
+[eE][nN][vV]*/
+.[eE][nN][vV]*/
+[vV][eE][nN][vV]*/
+.[vV][eE][nN][vV]*/
+
 #VSCode
 
 /.vscode/*
