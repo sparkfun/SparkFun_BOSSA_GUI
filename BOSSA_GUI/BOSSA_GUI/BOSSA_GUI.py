@@ -11,8 +11,15 @@ Please see the LICENSE.md for more details
 # import action things - the .syntax is used since these are part of the package
 from .au_worker import AUxWorker
 from .au_action import AxJob
-from .au_act_samba_loader import AUxSAMBADetect, AUxSAMBAErase, AUxSAMBAProgram, AUxSAMBAVerify, AUxSAMBAReset
+from .au_act_samba_loader import (
+    AUxSAMBADetect,
+    AUxSAMBAErase,
+    AUxSAMBAProgram,
+    AUxSAMBAVerify,
+    AUxSAMBAReset,
+)
 
+import argparse
 import darkdetect
 import sys
 import os
@@ -25,13 +32,22 @@ import time
 
 from typing import Iterator, Tuple
 
-from PyQt5.QtCore import QSettings, QProcess, QTimer, Qt, QIODevice, pyqtSignal, pyqtSlot, QObject
-from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QGridLayout, \
-    QPushButton, QApplication, QLineEdit, QFileDialog, QPlainTextEdit, \
-    QAction, QActionGroup, QMenu, QMenuBar, QMainWindow, QMessageBox, \
-    QCheckBox
+from PyQt5.QtCore import QSettings, pyqtSignal, pyqtSlot
+from PyQt5.QtWidgets import (
+    QWidget,
+    QLabel,
+    QComboBox,
+    QGridLayout,
+    QPushButton,
+    QApplication,
+    QLineEdit,
+    QFileDialog,
+    QPlainTextEdit,
+    QMessageBox,
+    QCheckBox,
+)
 from PyQt5.QtGui import QCloseEvent, QTextCursor, QIcon, QFont
-from PyQt5.QtSerialPort import QSerialPortInfo, QSerialPortInfo
+from PyQt5.QtSerialPort import QSerialPortInfo
 
 _APP_NAME = "BOSSA GUI"
 
@@ -791,14 +807,37 @@ class MainWidget(QWidget):
 def startGUI():
     """Start the GUI"""
     from sys import exit as sysExit
+
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description=f"{_APP_NAME} - {_APP_VERSION}")
+    parser.add_argument(
+        "-fw",
+        "--firmware",
+        type=str,
+        help="Path to the firmware binary file to upload.",
+    )
+    args, unknown = parser.parse_known_args()  # Ignore invalid arguments
+
     app = QApplication([])
     app.setOrganizationName('SparkFun Electronics')
     app.setApplicationName(_APP_NAME + ' - ' + _APP_VERSION)
     app.setWindowIcon(QIcon(resource_path("sfe_logo_sm.png")))
     app.setApplicationVersion(_APP_VERSION)
     w = MainWidget()
+
+    if unknown:
+        w.show_warning_message(f"Unrecognized arguments: {unknown}")
+
+    # Set the firmware path if provided via command-line
+    if args.firmware:
+        if os.path.exists(args.firmware):
+            w.firmwareLocation_lineedit.setText(args.firmware)
+        else:
+            w.show_error_message(f"File not found: {args.firmware}")
+
     w.show()
     sys.exit(app.exec_())
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     startGUI()
