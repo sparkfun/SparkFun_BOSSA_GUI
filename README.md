@@ -168,6 +168,26 @@ Extract it. Python SAM-BA Loader is in the ```BOSSA_GUI\SAMBALoad``` sub-folder.
 * Add the ```--reset``` switch to reset the board when the operation is complete. E.g. ```python SAMBALoader.py -p COM1 --reset verify -a 0x2000 -f myCode.bin```
 * Add the ```-v``` switch to display helpful verbose messages. Add ```-vv``` for even more verbose messages.
 
+### Specifying Firmware via Command-Line Argument
+
+You can specify the firmware file for the BOSSA_GUI application via a command-line argument. This preloads the firmware file into the GUI, saving time.
+
+#### Usage
+
+* **Windows**:
+
+  ```.\BOSSA_GUI.exe --firmware "C:\path\to\firmware.bin"```
+
+* **Linux/macOS**:
+
+  ```./BOSSA_GUI --firmware "/path/to/firmware.bin"```
+
+* **Python (direct execution)**:
+
+  ```python BOSSA_GUI.py --firmware "/path/to/firmware.bin"```
+
+Ensure the specified firmware path is valid and points to a `.bin` file. If the file does not exist, an error message will be printed.
+
 ## Thanks
 
 Big thanks go to Dean Camera (@abcminiuser) and the contributors to [Python SAM-BA Loader](https://github.com/abcminiuser/sam-ba-loader).
